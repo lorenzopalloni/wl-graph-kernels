@@ -6,6 +6,7 @@ my_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, my_path + '/../')
 
 import wlkernel
+import rdflib
 
 
 def test_node_repr():
@@ -70,3 +71,24 @@ def test_edge_eq():
     dest = wlkernel.Node(label='B', depth=4)
     edge2 = wlkernel.Edge(source, dest, label='P2', depth=2)
     assert edge1 != edge2
+
+
+def test_wlrdfgraph_init():
+    graph = rdflib.Graph().parse('./example.nt', format='nt')
+
+    max_depth = 0
+    wl_rdf_graph = wlkernel.WLRDFGraph(
+        instance='_:B1', graph=graph, max_depth=max_depth
+    )
+    root = wlkernel.Node(label='', depth=max_depth)
+
+    assert root in wl_rdf_graph.nodes[max_depth]
+    assert len(wl_rdf_graph.nodes) == 1
+    assert len(wl_rdf_graph.nodes[max_depth]) == 1
+    assert len(wl_rdf_graph.edges) == 1
+    assert len(wl_rdf_graph.edges[max_depth - 1]) == 0
+    # assert d_0 in wl_rdf_graph.nodes[max_depth - 1]
+
+    # b1_p2_d = wlkernel.Edge(root, d_0, '_:P2', depth=max_depth - 1)
+
+def test_wlrdfgraph_repr():

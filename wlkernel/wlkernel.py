@@ -1,3 +1,7 @@
+import rdflib
+from collections import defaultdict
+
+
 class Node:
     'A node of a Weisfeiler-Lehman RDF graph'
 
@@ -52,15 +56,42 @@ class Edge:
 class WLRDFGraph:
     'Weisfeiler-Lehman RDF graph'
 
-    def __init__(self):
-        self.nodes = []
-        self.edges = []
+    def __init__(self, instance: str, graph: rdflib.Graph, max_depth: int):
+        self.root = Node(label=instance, depth=max_depth)
+        self.nodes = defaultdict(list, {max_depth: [self.root]})
+        self.edges = defaultdict(list)
+
+        search_front = [self.root]
+
+        for depth in range(max_depth - 1, -1, -1):
+            new_search_front = []
+            for parent in search_front:
+                triples = [
+                    (str(s), str(p), str(o))
+                    for (s, p, o) in graph if str(s) == parent.label
+                ]
+                for (subj, pred, obj) in triples:
+                    child = Node(obj, depth)
+                    edge = Edge(parent, child, pred, depth)
+                    new_search_front.append(child)
+
+                    child.add_neighbor(edge)
+                    edge.neighbor = child
+
+                    if child not in self.nodes[depth]:
+                        self.nodes[depth].append(child)
+                    self.edges[depth].append(edge)
+            search_front = new_search_front
+
+        # cleanup the root and the relative edges
+        self.nodes[max_depth][0].label = ''
+
+        for edge in self.edges[max_depth - 1]:
+            if instance == edge.source.label:
+                edge.source.label = ''
 
     def __repr__(self):
-        pass
+        return repr(self.edges)
 
     def __str__(self):
-        pass
-
-    def __eq__(self):
-        pass
+        return str(self.edges)
