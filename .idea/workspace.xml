@@ -10,45 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="69492a05-ee98-497a-ab16-4a326fe70153" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.ipynb_checkpoints/01-implementation_attempt-checkpoint.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.ipynb_checkpoints/AIFB_most_common-checkpoint.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.ipynb_checkpoints/README-checkpoint.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.ipynb_checkpoints/Rocks_most_common-checkpoint.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.ipynb_checkpoints/main-checkpoint.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.ipynb_checkpoints/named_rock_unit-checkpoint.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.ipynb_checkpoints/rdf-checkpoint.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/.ipynb_checkpoints/Lexicon_NamedRockUnit-checkpoint.nt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/.ipynb_checkpoints/aifbfixed_complete-checkpoint.n3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/.ipynb_checkpoints/subset_NamedRockUnit-checkpoint.nt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Lexicon_Class.nt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Lexicon_DefinitionStatus.nt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Lexicon_EquivalenceType.nt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Lexicon_EquivalentName.nt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Lexicon_LithogeneticType.nt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Lexicon_LithologyComponent.nt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Lexicon_NamedRockUnit.nt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Lexicon_RockUnitRank.nt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Lexicon_ShapeType.nt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Lexicon_SourceInfo.nt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Lexicon_SpatialScope.nt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Lexicon_Stratotype.nt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Lexicon_StratotypeType.nt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Lexicon_Theme.nt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/aifbfixed_complete.n3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/head_Lexicon_NamedRockUnit.nt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/most_common.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/ontology.rdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/sample.rdf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/subset_NamedRockUnit.nt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wlkernel/.ipynb_checkpoints/\-checkpoint" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wlkernel/.ipynb_checkpoints/wlkernel-checkpoint.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wlkernel/\" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/wlkernel/tests/example.nt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/01-implementation_attempt.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/01-implementation_attempt.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wlkernel/wlkernel.py" beforeDir="false" afterPath="$PROJECT_DIR$/wlkernel/wlkernel.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -76,8 +38,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/wlkernel/wlkernel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
-              <caret line="94" lean-forward="true" selection-start-line="94" selection-end-line="94" />
+            <state relative-caret-position="795">
+              <caret line="97" selection-start-line="97" selection-end-line="97" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -88,8 +50,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="575">
-              <caret line="94" selection-start-line="94" selection-end-line="94" />
+            <state relative-caret-position="545">
+              <caret line="92" lean-forward="true" selection-start-line="92" selection-end-line="92" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -271,7 +233,7 @@
       <workItem from="1558088632686" duration="1412000" />
       <workItem from="1558105761016" duration="3907000" />
       <workItem from="1558372188088" duration="1211000" />
-      <workItem from="1558531891347" duration="9286000" />
+      <workItem from="1558531891347" duration="9565000" />
     </task>
     <servers />
   </component>
@@ -296,7 +258,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="37176000" />
+    <option name="totallyTimeSpent" value="37455000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="6" width="1920" height="1074" extended-state="6" />
@@ -315,7 +277,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.58885384" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.2628812" />
       <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -398,8 +360,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="575">
-          <caret line="94" selection-start-line="94" selection-end-line="94" />
+        <state relative-caret-position="545">
+          <caret line="92" lean-forward="true" selection-start-line="92" selection-end-line="92" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
@@ -418,8 +380,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/wlkernel/wlkernel.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="94" lean-forward="true" selection-start-line="94" selection-end-line="94" />
+        <state relative-caret-position="795">
+          <caret line="97" selection-start-line="97" selection-end-line="97" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>

@@ -90,5 +90,3 @@ def test_wlrdfgraph_init():
     # assert d_0 in wl_rdf_graph.nodes[max_depth - 1]
 
     # b1_p2_d = wlkernel.Edge(root, d_0, '_:P2', depth=max_depth - 1)
-
-def test_wlrdfgraph_repr():
