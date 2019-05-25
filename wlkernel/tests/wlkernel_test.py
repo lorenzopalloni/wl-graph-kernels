@@ -4,7 +4,6 @@ import pytest
 import sys, os
 my_path = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, my_path + '/../')
-
 import wlkernel
 import rdflib
 
@@ -36,8 +35,8 @@ def test_edge_repr():
     dest = wlkernel.Node(label='B', depth=2)
     edge = wlkernel.Edge(source, dest, label='P1', depth=2)
     assert (
-        "Edge(source=Node(label='A', 3), dest=Node(label='B', depth=2), "
-        "label='P1', depth=2)"
+        "Edge(source=Node(label='A', depth=3), dest=Node(label='B', depth=2), "
+        "label='P1', depth=2)" == repr(edge)
     )
 
 
@@ -74,11 +73,11 @@ def test_edge_eq():
 
 
 def test_wlrdfgraph_init():
-    graph = rdflib.Graph().parse('./example.nt', format='nt')
+    graph = rdflib.Graph().parse('./example.ttl', format='turtle')
 
     max_depth = 0
     wl_rdf_graph = wlkernel.WLRDFGraph(
-        instance='_:B1', graph=graph, max_depth=max_depth
+        instance='B1', graph=graph, max_depth=max_depth
     )
     root = wlkernel.Node(label='', depth=max_depth)
 
@@ -87,6 +86,22 @@ def test_wlrdfgraph_init():
     assert len(wl_rdf_graph.nodes[max_depth]) == 1
     assert len(wl_rdf_graph.edges) == 1
     assert len(wl_rdf_graph.edges[max_depth - 1]) == 0
-    # assert d_0 in wl_rdf_graph.nodes[max_depth - 1]
 
-    # b1_p2_d = wlkernel.Edge(root, d_0, '_:P2', depth=max_depth - 1)
+
+def test_wlrdfgraph_repr():
+    graph = rdflib.Graph().parse('./example.ttl', format='turtle')
+    
+    max_depth = 1
+    root = wlkernel.Node(label='', depth=max_depth)
+    wl_rdf_graph = wlkernel.WLRDFGraph('B1', graph, max_depth)
+    assert root in wl_rdf_graph.nodes[max_depth]
+    assert (
+        "defaultdict(<class 'list'>, {0: [Edge(source=Node(label='', "
+        "depth=1), dest=Node(label='D', depth=0), label='P2', "
+        "depth=0)]})" == repr(wl_rdf_graph)
+    )
+
+
+def test_wlrdfgraph_relabel():
+    graph = rdflib.Graph().parse('./example.ttl', format='turtle')
+    max_depth = 1

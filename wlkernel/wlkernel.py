@@ -1,5 +1,6 @@
 import rdflib
 from collections import defaultdict
+from typing import NoReturn, List
 
 
 class Node:
@@ -9,6 +10,7 @@ class Node:
         self.label = label
         self.depth = depth
         self.neighbors = []
+        self.prev_label = label
 
     def add_neighbor(self, edge):
         'Add an edge as a neighbor'
@@ -33,11 +35,12 @@ class Edge:
         self.label = label
         self.depth = depth
         self.neighbor = None
+        self.prev_label = label
 
     def __repr__(self):
         return (
             f'Edge(source={repr(self.source)}, dest={repr(self.dest)}, '
-            f'label={self.label}, depth={self.depth})'
+            f"label='{self.label}', depth={self.depth})"
         )
 
     def __str__(self):
@@ -54,7 +57,7 @@ class Edge:
 
 
 class WLRDFGraph:
-    'Weisfeiler-Lehman RDF graph'
+    'Weisfeiler-Lehman RDF subgraph'
 
     def __init__(self, instance: str, graph: rdflib.Graph, max_depth: int):
         self.root = Node(label=instance, depth=max_depth)
@@ -85,13 +88,97 @@ class WLRDFGraph:
 
         # cleanup the root and the relative edges
         self.nodes[max_depth][0].label = ''
+        self.nodes[max_depth][0].prev_label = ''
 
         for edge in self.edges[max_depth - 1]:
             if instance == edge.source.label:
                 edge.source.label = ''
+                edge.source.prev_label = ''
 
     def __repr__(self):
         return repr(self.edges)
 
     def __str__(self):
         return str(self.edges)
+
+
+def get_multiset_label(nodes: List[Node]) -> str:
+    'Sorts and concatenates the labels of a list of nodes into a string.'
+    nodes_sorted = sorted(nodes, key=(lambda node: node.prev_label))
+    return ''.join([node.prev_label for node in nodes_sorted])
+
+
+def relabel(g_first: WLRDFGraph, g_second: WLRDFGraph, max_depth: int,
+            max_iteration: int) -> NoReturn:
+    'Weisfeiler-Lehman Relabeling for RDF subgraph'
+
+    # 0-th and 1-th iterations of Algorithm 3.
+    counter_one = 0
+    counter_two = 0
+    counter_three = 0
+    counter_four = 0
+
+    # Steps 1. 2. and 3. of algorithm 3. for nodes
+    uniq_labels_node = defaultdict(set)
+    for depth in range(max_depth + 1):
+        for node in g_first.nodes[depth]:
+            node.label += get_multiset_label(node.neighbors)
+            uniq_labels_node[depth].add(node.label)
+
+        for node in g_second.nodes[depth]:
+            node.label += get_multiset_label(node.neighbors)
+            uniq_labels_node[depth].add(node.label)
+
+    # Steps 1. 2. and 3. of algorithm 3. for edges
+    uniq_labels_edge = defaultdict(set)
+    for depth in range(max_depth):
+        for edge in g_first.edges[depth]:
+            edge.label += edge.neighbor.prev_label
+            uniq_labels_edge[depth].add(edge.label)
+
+        for edge in g_second.edges[depth]:
+            edge.label += edge.neighbor.prev_label
+            uniq_labels_edge[depth].add(edge.label)
+
+    # Step 4. relabeling for nodes
+    for depth in range(max_depth + 1):
+        for node in g_first.nodes[depth]:
+            counter_one += 1
+            node.label = str(len(uniq_labels_node[depth]) + counter_one)
+            node.prev_label = node.label
+        for node in g_second.nodes[depth]:
+            counter_two += 1
+            node.label = str(len(uniq_labels_node[depth]) + counter_two)
+            node.prev_label = node.label
+
+    # Step 4. relabeling for nodes
+    for depth in range(max_depth + 1):
+        for edge in g_first.edges[depth]:
+            counter_three += 1
+            edge.label = str(len(uniq_labels_edge[depth]) + counter_three)
+            edge.prev_label = edge.label
+        for edge in g_second.edges[depth]:
+            counter_four += 1
+            edge.label = str(len(uniq_labels_edge[depth]) + counter_four)
+            edge.prev_label = edge.label
+
+
+# def relabel(g_first: WLRDFGraph, g_second: WLRDFGraph, max_depth: int,
+#             max_iteration: int):
+#     'Weisfeiler-Lehman Relabeling for RDF subgraph'
+#
+#     uniq_label = set()
+#     # first iteration - for now only for the nodes
+#     for depth in range(max_depth):
+#         for node in g_first.nodes[depth]:
+#             M = node.neighbors
+#             sort('M by prev_label')
+#             node.label += concatenate('all prev_label of the nodes in M')
+#             uniq_label.add(node.label)
+#         for node in g_second[depth]:
+#             pass
+#
+#     for depth in range(max_depth):
+#         # relabella the unique labels with f'{len(uniq_label) + counter(che
+#         # itera su range(len(uniq_label)))}'
+#         pass
