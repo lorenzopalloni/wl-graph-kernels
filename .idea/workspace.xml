@@ -12,8 +12,6 @@
     <list default="true" id="69492a05-ee98-497a-ab16-4a326fe70153" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/wlkernel/testing_inner_functions.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/wlkernel/testing_inner_functions.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wlkernel/tests/example.ttl" beforeDir="false" afterPath="$PROJECT_DIR$/wlkernel/tests/example.ttl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/wlkernel/wlkernel.py" beforeDir="false" afterPath="$PROJECT_DIR$/wlkernel/wlkernel.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -56,8 +54,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/wlkernel/wlkernel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="697">
-              <caret line="169" lean-forward="true" selection-start-line="169" selection-end-line="169" />
+            <state relative-caret-position="761">
+              <caret line="144" column="60" selection-start-line="144" selection-start-column="60" selection-end-line="144" selection-end-column="60" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -68,7 +66,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="482">
+            <state relative-caret-position="563">
               <caret line="119" column="4" selection-start-line="119" selection-start-column="4" selection-end-line="119" selection-end-column="4" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
@@ -136,9 +134,9 @@
       <scroll-view-position x="0" y="0" />
     </layout>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="4">
     <option name="y" value="6" />
-    <option name="width" value="779" />
+    <option name="width" value="960" />
     <option name="height" value="1074" />
   </component>
   <component name="ProjectLevelVcsManager">
@@ -249,7 +247,8 @@
       <workItem from="1558796957068" duration="720000" />
       <workItem from="1558856770500" duration="7115000" />
       <workItem from="1558871746888" duration="1935000" />
-      <workItem from="1558881520336" duration="4904000" />
+      <workItem from="1558881520336" duration="5054000" />
+      <workItem from="1558889238546" duration="2223000" />
     </task>
     <servers />
   </component>
@@ -286,10 +285,10 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="78198000" />
+    <option name="totallyTimeSpent" value="80571000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="6" width="1920" height="1074" extended-state="6" />
+    <frame x="0" y="6" width="960" height="1074" extended-state="4" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.1664888" />
@@ -306,7 +305,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="11" visible="true" weight="0.22187172" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.13669822" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.32912722" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -421,7 +420,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="482">
+        <state relative-caret-position="563">
           <caret line="119" column="4" selection-start-line="119" selection-start-column="4" selection-end-line="119" selection-end-column="4" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
@@ -431,8 +430,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/wlkernel/wlkernel.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="697">
-          <caret line="169" lean-forward="true" selection-start-line="169" selection-end-line="169" />
+        <state relative-caret-position="761">
+          <caret line="144" column="60" selection-start-line="144" selection-start-column="60" selection-end-line="144" selection-end-column="60" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>

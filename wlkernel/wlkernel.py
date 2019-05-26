@@ -113,7 +113,9 @@ def relabel(g_first: WLRDFGraph, g_second: WLRDFGraph, max_depth: int,
             max_iteration: int) -> NoReturn:
     'Weisfeiler-Lehman Relabeling for RDF subgraph'
 
-    # 0-th and 1-th iterations of Algorithm 3.
+    start_label_nodes = defaultdict(int)
+    start_label_edges = defaultdict(int)
+
     for iteration in range(max_iteration):
         # Steps 1. 2. and 3. of the algorithm 3. for nodes
         uniq_labels_node = defaultdict(set)
@@ -137,53 +139,31 @@ def relabel(g_first: WLRDFGraph, g_second: WLRDFGraph, max_depth: int,
 
         # Step 4. relabeling for nodes
         for depth in range(max_depth + 1):
-            uniq_temp = list(uniq_labels_node[depth])
+            uniques = list(uniq_labels_node[depth])
             for node in g_first.nodes[depth]:
                 node.label = str(
-                    (iteration + 1) * len(uniq_temp) +
-                    uniq_temp.index(node.label) % len(uniq_temp)
+                    (iteration + 1) * start_label_nodes[depth] + uniques.index(node.label)
                 )
                 node.prev_label = node.label
 
             for node in g_second.nodes[depth]:
                 node.label = str(
-                    (iteration + 1) * len(uniq_temp) +
-                    uniq_temp.index(node.label) % len(uniq_temp)
+                    (iteration + 1) * start_label_nodes[depth] + uniques.index(node.label)
                 )
                 node.prev_label = node.label
+            start_label_nodes[depth] += len(uniques)
 
         # Step 4. relabeling for edges
         for depth in range(max_depth):
-            uniq_temp = list(uniq_labels_edge[depth])
+            uniques = list(uniq_labels_edge[depth])
             for edge in g_first.edges[depth]:
                 edge.label = str(
-                    (iteration + 1) * len(uniq_temp) +
-                    uniq_temp.index(edge.label) % len(uniq_temp)
+                    (iteration + 1) * start_label_edges[depth] + uniques.index(edge.label)
                 )
                 edge.prev_label = edge.label
             for edge in g_second.edges[depth]:
                 edge.label = str(
-                    (iteration + 1) * len(uniq_temp) +
-                    uniq_temp.index(edge.label) % len(uniq_temp)
+                    (iteration + 1) * start_label_edges[depth] + uniques.index(edge.label)
                 )
                 edge.prev_label = edge.label
-
-# def relabel(g_first: WLRDFGraph, g_second: WLRDFGraph, max_depth: int,
-#             max_iteration: int):
-#     'Weisfeiler-Lehman Relabeling for RDF subgraph'
-#
-#     uniq_label = set()
-#     # first iteration - for now only for the nodes
-#     for depth in range(max_depth):
-#         for node in g_first.nodes[depth]:
-#             M = node.neighbors
-#             sort('M by prev_label')
-#             node.label += concatenate('all prev_label of the nodes in M')
-#             uniq_label.add(node.label)
-#         for node in g_second[depth]:
-#             pass
-#
-#     for depth in range(max_depth):
-#         # relabella the unique labels with f'{len(uniq_label) + counter(che
-#         # itera su range(len(uniq_label)))}'
-#         pass
+            start_label_edges[depth] += len(uniques)
