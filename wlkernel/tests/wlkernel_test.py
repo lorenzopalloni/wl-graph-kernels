@@ -90,14 +90,15 @@ def test_wlrdfgraph_init():
     assert wlkernel.Node(label='D', depth=3) in g.nodes[3]
     assert len(g.nodes[3]) == 2
     # depth 2
-    assert wlkernel.Node(label='E', depth=2) in g.nodes[2]
+    assert wlkernel.Node(label='H', depth=2) in g.nodes[2]
     assert len(g.nodes[2]) == 1
     # depth 1
-    assert wlkernel.Node(label='B2', depth=1) in g.nodes[1]
+    assert wlkernel.Node(label='A2', depth=1) in g.nodes[1]
     assert len(g.nodes[1]) == 1
     # depth 0
     assert wlkernel.Node(label='D', depth=0) in g.nodes[0]
-    assert len(g.nodes[0]) == 1
+    assert wlkernel.Node(label='E', depth=0) in g.nodes[0]
+    assert len(g.nodes[0]) == 2
 
 
 def test_wlrdfgraph_repr():
@@ -109,8 +110,13 @@ def test_wlrdfgraph_repr():
     assert root in wl_rdf_graph.nodes[max_depth]
     assert (
         "defaultdict(<class 'list'>, {0: [Edge(source=Node(label='', "
-        "depth=1), dest=Node(label='D', depth=0), label='P2', "
-        "depth=0)]})" == repr(wl_rdf_graph)
+        "depth=1), dest=Node(label='F', depth=0), label='P3', "
+        "depth=0), Edge(source=Node(label='', depth=1), dest=Node(label='G', "
+        "depth=0), label='P2', depth=0)]})" == repr(wl_rdf_graph) or
+        "defaultdict(<class 'list'>, {0: [Edge(source=Node(label='', depth=1),"
+        " dest=Node(label='G', depth=0), label='P2', depth=0), "
+        "Edge(source=Node(label='', depth=1), dest=Node(label='F', depth=0), "
+        "label='P3', depth=0)]})" == repr(wl_rdf_graph)
     )
 
 

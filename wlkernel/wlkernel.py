@@ -83,7 +83,8 @@ class WLRDFGraph:
 
                     if child not in self.nodes[depth]:
                         self.nodes[depth].append(child)
-                    self.edges[depth].append(edge)
+                    if edge not in self.edges[depth]:
+                        self.edges[depth].append(edge)
             search_front = new_search_front
 
         # cleanup the root and the relative edges
@@ -113,55 +114,59 @@ def relabel(g_first: WLRDFGraph, g_second: WLRDFGraph, max_depth: int,
     'Weisfeiler-Lehman Relabeling for RDF subgraph'
 
     # 0-th and 1-th iterations of Algorithm 3.
-    counter_one = 0
-    counter_two = 0
-    counter_three = 0
-    counter_four = 0
+    for iteration in range(max_iteration):
+        # Steps 1. 2. and 3. of the algorithm 3. for nodes
+        uniq_labels_node = defaultdict(set)
+        for depth in range(max_depth + 1):
+            for node in g_first.nodes[depth]:
+                node.label += get_multiset_label(node.neighbors)
+                uniq_labels_node[depth].add(node.label)
+            for node in g_second.nodes[depth]:
+                node.label += get_multiset_label(node.neighbors)
+                uniq_labels_node[depth].add(node.label)
 
-    # Steps 1. 2. and 3. of the algorithm 3. for nodes
-    uniq_labels_node = defaultdict(set)
-    for depth in range(max_depth + 1):
-        for node in g_first.nodes[depth]:
-            node.label += get_multiset_label(node.neighbors)
-            uniq_labels_node[depth].add(node.label)
+        # Steps 1. 2. and 3. of the algorithm 3. for edges
+        uniq_labels_edge = defaultdict(set)
+        for depth in range(max_depth):
+            for edge in g_first.edges[depth]:
+                edge.label += edge.neighbor.prev_label
+                uniq_labels_edge[depth].add(edge.label)
+            for edge in g_second.edges[depth]:
+                edge.label += edge.neighbor.prev_label
+                uniq_labels_edge[depth].add(edge.label)
 
-        for node in g_second.nodes[depth]:
-            node.label += get_multiset_label(node.neighbors)
-            uniq_labels_node[depth].add(node.label)
+        # Step 4. relabeling for nodes
+        for depth in range(max_depth + 1):
+            uniq_temp = list(uniq_labels_node[depth])
+            for node in g_first.nodes[depth]:
+                node.label = str(
+                    (iteration + 1) * len(uniq_temp) +
+                    uniq_temp.index(node.label) % len(uniq_temp)
+                )
+                node.prev_label = node.label
 
-    # Steps 1. 2. and 3. of the algorithm 3. for edges
-    uniq_labels_edge = defaultdict(set)
-    for depth in range(max_depth):
-        for edge in g_first.edges[depth]:
-            edge.label += edge.neighbor.prev_label
-            uniq_labels_edge[depth].add(edge.label)
+            for node in g_second.nodes[depth]:
+                node.label = str(
+                    (iteration + 1) * len(uniq_temp) +
+                    uniq_temp.index(node.label) % len(uniq_temp)
+                )
+                node.prev_label = node.label
 
-        for edge in g_second.edges[depth]:
-            edge.label += edge.neighbor.prev_label
-            uniq_labels_edge[depth].add(edge.label)
-
-    # Step 4. relabeling for nodes
-    for depth in range(max_depth + 1):
-        for node in g_first.nodes[depth]:
-            counter_one += 1
-            node.label = str(len(uniq_labels_node[depth]) + counter_one)
-            node.prev_label = node.label
-        for node in g_second.nodes[depth]:
-            counter_two += 1
-            node.label = str(len(uniq_labels_node[depth]) + counter_two)
-            node.prev_label = node.label
-
-    # Step 4. relabeling for edges
-    for depth in range(max_depth + 1):
-        for edge in g_first.edges[depth]:
-            counter_three += 1
-            edge.label = str(len(uniq_labels_edge[depth]) + counter_three)
-            edge.prev_label = edge.label
-        for edge in g_second.edges[depth]:
-            counter_four += 1
-            edge.label = str(len(uniq_labels_edge[depth]) + counter_four)
-            edge.prev_label = edge.label
-
+        # Step 4. relabeling for edges
+        for depth in range(max_depth):
+            uniq_temp = list(uniq_labels_edge[depth])
+            for edge in g_first.edges[depth]:
+                edge.label = str(
+                    (iteration + 1) * len(uniq_temp) +
+                    uniq_temp.index(edge.label) % len(uniq_temp)
+                )
+                edge.prev_label = edge.label
+            for edge in g_second.edges[depth]:
+                edge.label = str(
+                    (iteration + 1) * len(uniq_temp) +
+                    uniq_temp.index(edge.label) % len(uniq_temp)
+                )
+                edge.prev_label = edge.label
 
 # def relabel(g_first: WLRDFGraph, g_second: WLRDFGraph, max_depth: int,
 #             max_iteration: int):
