@@ -11,9 +11,7 @@
   <component name="ChangeListManager">
     <list default="true" id="69492a05-ee98-497a-ab16-4a326fe70153" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wlkernel/\" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/wlkernel/tests/example.nt" beforeDir="false" afterPath="$PROJECT_DIR$/wlkernel/tests/example.nt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wlkernel/tests/example.ttl" beforeDir="false" afterPath="$PROJECT_DIR$/wlkernel/tests/example.ttl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/wlkernel/wlkernel.py" beforeDir="false" afterPath="$PROJECT_DIR$/wlkernel/wlkernel.py" afterDir="false" />
     </list>
@@ -27,7 +25,7 @@
     <SUITE FILE_PATH="coverage/wl_graph_kernels$pytest_for_wlkernel_tests_wlkernel_test.coverage" NAME="pytest for wlkernel.tests.wlkernel_test Coverage Results" MODIFIED="1558620436548" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.41622198">
+    <splitter split-orientation="horizontal" split-proportion="0.3954109">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="false">
@@ -45,8 +43,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/wlkernel/wlkernel.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="571">
-                  <caret line="141" lean-forward="true" selection-start-line="141" selection-end-line="141" />
+                <state relative-caret-position="310">
+                  <caret line="131" column="54" selection-start-line="131" selection-start-column="54" selection-end-line="131" selection-end-column="54" />
                   <folding>
                     <element signature="e#0#13#0" expanded="true" />
                   </folding>
@@ -57,8 +55,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="765">
-                  <caret line="48" selection-start-line="48" selection-end-line="48" />
+                <state relative-caret-position="1241">
+                  <caret line="76" selection-start-line="76" selection-end-line="76" />
                   <folding>
                     <element signature="e#0#13#0" expanded="true" />
                   </folding>
@@ -89,20 +87,6 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$USER_HOME$/Computer_Science/Advanced_Algorithms_and_Graph_Mining/example_graphs/04-LabelExpansion.dot">
-              <provider selected="true" editor-type-id="text-editor" />
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$USER_HOME$/Computer_Science/Advanced_Algorithms_and_Graph_Mining/example_graphs/04-RdfGraph.dot">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="51">
-                  <caret line="3" selection-start-line="3" selection-end-line="3" />
-                </state>
-              </provider>
-            </entry>
-          </file>
         </leaf>
       </split-first>
       <split-second>
@@ -110,8 +94,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="693">
-                  <caret line="101" column="4" selection-start-line="101" selection-start-column="4" selection-end-line="101" selection-end-column="4" />
+                <state relative-caret-position="497">
+                  <caret line="101" lean-forward="true" selection-start-line="101" selection-end-line="101" />
                   <folding>
                     <element signature="e#0#13#0" expanded="true" />
                   </folding>
@@ -147,8 +131,8 @@
         <option value="$PROJECT_DIR$/Graph.py" />
         <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/wlkernel/example.nt" />
-        <option value="$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py" />
         <option value="$PROJECT_DIR$/wlkernel/wlkernel.py" />
+        <option value="$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py" />
       </list>
     </option>
   </component>
@@ -267,6 +251,9 @@
       <workItem from="1558789509137" duration="4880000" />
       <workItem from="1558796454231" duration="144000" />
       <workItem from="1558796637742" duration="84000" />
+      <workItem from="1558796957068" duration="720000" />
+      <workItem from="1558856770500" duration="7115000" />
+      <workItem from="1558871746888" duration="1695000" />
     </task>
     <servers />
   </component>
@@ -303,10 +290,11 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="63524000" />
+    <option name="totallyTimeSpent" value="73054000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="6" width="1920" height="1074" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.1664888" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -322,8 +310,8 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.119873814" />
-      <window_info anchor="bottom" id="Python Console" order="12" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.14826499" />
+      <window_info anchor="bottom" id="Python Console" order="12" weight="0.32912722" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -443,20 +431,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py">
+    <entry file="file://$PROJECT_DIR$/wlkernel/wlkernel.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
-          <caret line="48" selection-start-line="48" selection-end-line="48" />
+        <state relative-caret-position="310">
+          <caret line="131" column="54" selection-start-line="131" selection-start-column="54" selection-end-line="131" selection-end-column="54" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/wlkernel/wlkernel.py">
+    <entry file="file://$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="571">
-          <caret line="141" lean-forward="true" selection-start-line="141" selection-end-line="141" />
+        <state relative-caret-position="497">
+          <caret line="101" lean-forward="true" selection-start-line="101" selection-end-line="101" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>

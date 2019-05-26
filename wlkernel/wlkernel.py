@@ -118,7 +118,7 @@ def relabel(g_first: WLRDFGraph, g_second: WLRDFGraph, max_depth: int,
     counter_three = 0
     counter_four = 0
 
-    # Steps 1. 2. and 3. of algorithm 3. for nodes
+    # Steps 1. 2. and 3. of the algorithm 3. for nodes
     uniq_labels_node = defaultdict(set)
     for depth in range(max_depth + 1):
         for node in g_first.nodes[depth]:
@@ -129,7 +129,7 @@ def relabel(g_first: WLRDFGraph, g_second: WLRDFGraph, max_depth: int,
             node.label += get_multiset_label(node.neighbors)
             uniq_labels_node[depth].add(node.label)
 
-    # Steps 1. 2. and 3. of algorithm 3. for edges
+    # Steps 1. 2. and 3. of the algorithm 3. for edges
     uniq_labels_edge = defaultdict(set)
     for depth in range(max_depth):
         for edge in g_first.edges[depth]:
@@ -151,7 +151,7 @@ def relabel(g_first: WLRDFGraph, g_second: WLRDFGraph, max_depth: int,
             node.label = str(len(uniq_labels_node[depth]) + counter_two)
             node.prev_label = node.label
 
-    # Step 4. relabeling for nodes
+    # Step 4. relabeling for edges
     for depth in range(max_depth + 1):
         for edge in g_first.edges[depth]:
             counter_three += 1

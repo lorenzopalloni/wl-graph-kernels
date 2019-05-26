@@ -1,0 +1,21 @@
+digraph G {
+    rankdir = LR;
+    color = "blue2";
+    node [color = "blue2", fontcolor = "blue2"];
+    edge [fontsize = 12];
+    A -> B [label = "isGreaterThan"];
+    B -> A [label = "isLesserThan"];
+    A -> A1 [label = "hasProperty"];
+    A -> A2 [label = "hasProperty"];
+    B -> C [label = "isGreaterThan"];
+    C -> B [label = "isLesserThan"];
+    C -> D [label = "isGreaterThan"];
+    D -> C [label = "isLesserThan"];
+    C -> C1 [label = "hasProperty"];
+    C -> C2 [label = "hasProperty"];
+    
+    {rank = min; B; D;}
+    {rank = same; A; C;}
+    {rank = max; A1; A2;}
+    {rank = max; C1; C2;}
+}

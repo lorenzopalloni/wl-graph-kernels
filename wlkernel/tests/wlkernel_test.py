@@ -75,17 +75,29 @@ def test_edge_eq():
 def test_wlrdfgraph_init():
     graph = rdflib.Graph().parse('./example.ttl', format='turtle')
 
-    max_depth = 0
-    wl_rdf_graph = wlkernel.WLRDFGraph(
-        instance='B1', graph=graph, max_depth=max_depth
+    max_depth = 4
+    g = wlkernel.WLRDFGraph(
+        instance='A1', graph=graph, max_depth=max_depth
     )
-    root = wlkernel.Node(label='', depth=max_depth)
+    assert wlkernel.Node('A1', depth=max_depth) not in g.nodes[0]
 
-    assert root in wl_rdf_graph.nodes[max_depth]
-    assert len(wl_rdf_graph.nodes) == 1
-    assert len(wl_rdf_graph.nodes[max_depth]) == 1
-    assert len(wl_rdf_graph.edges) == 1
-    assert len(wl_rdf_graph.edges[max_depth - 1]) == 0
+    root = wlkernel.Node(label='', depth=max_depth)
+    # depth 4
+    assert root in g.nodes[max_depth]
+    assert len(g.nodes[4]) == 1
+    # depth 3
+    assert wlkernel.Node(label='C', depth=3) in g.nodes[3]
+    assert wlkernel.Node(label='D', depth=3) in g.nodes[3]
+    assert len(g.nodes[3]) == 2
+    # depth 2
+    assert wlkernel.Node(label='E', depth=2) in g.nodes[2]
+    assert len(g.nodes[2]) == 1
+    # depth 1
+    assert wlkernel.Node(label='B2', depth=1) in g.nodes[1]
+    assert len(g.nodes[1]) == 1
+    # depth 0
+    assert wlkernel.Node(label='D', depth=0) in g.nodes[0]
+    assert len(g.nodes[0]) == 1
 
 
 def test_wlrdfgraph_repr():
