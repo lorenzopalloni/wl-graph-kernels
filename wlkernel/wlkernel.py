@@ -102,14 +102,23 @@ class WLRDFGraph:
     def __str__(self):
         return str(self.edges)
 
+    def update_labels(self, max_depth: int) -> NoReturn:
+        'Assign to the label the value of prev_value for each node and edge.'
+        for depth in range(max_depth + 1):
+            for node in self.nodes[depth]:
+                node.label = node.prev_label
+        for depth in range(max_depth):
+            for edge in self.edges[depth]:
+                edge.label = edge.prev_label
 
-def get_multiset_label(nodes: List[Node]) -> str:
-    'Sorts and concatenates the labels of a list of nodes into a string.'
-    nodes_sorted = sorted(nodes, key=(lambda node: node.prev_label))
-    return ''.join([node.prev_label for node in nodes_sorted])
+
+def get_multiset_label(edges: List[Edge]) -> str:
+    'Sort and concatenate the labels of a list of edges into a string.'
+    edges_sorted = sorted(edges, key=(lambda e: e.prev_label))
+    return ''.join(edge.prev_label for edge in edges_sorted)
 
 
-def relabel(g_first: WLRDFGraph, g_second: WLRDFGraph, max_depth: int,
+def relabel(left_graph: WLRDFGraph, right_graph: WLRDFGraph, max_depth: int,
             max_iteration: int) -> NoReturn:
     'Weisfeiler-Lehman Relabeling for RDF subgraph'
 
@@ -120,50 +129,52 @@ def relabel(g_first: WLRDFGraph, g_second: WLRDFGraph, max_depth: int,
         # Steps 1. 2. and 3. of the algorithm 3. for nodes
         uniq_labels_node = defaultdict(set)
         for depth in range(max_depth + 1):
-            for node in g_first.nodes[depth]:
+            for node in left_graph.nodes[depth]:
                 node.label += get_multiset_label(node.neighbors)
                 uniq_labels_node[depth].add(node.label)
-            for node in g_second.nodes[depth]:
+            for node in right_graph.nodes[depth]:
                 node.label += get_multiset_label(node.neighbors)
                 uniq_labels_node[depth].add(node.label)
 
         # Steps 1. 2. and 3. of the algorithm 3. for edges
         uniq_labels_edge = defaultdict(set)
         for depth in range(max_depth):
-            for edge in g_first.edges[depth]:
+            for edge in left_graph.edges[depth]:
                 edge.label += edge.neighbor.prev_label
                 uniq_labels_edge[depth].add(edge.label)
-            for edge in g_second.edges[depth]:
+            for edge in right_graph.edges[depth]:
                 edge.label += edge.neighbor.prev_label
                 uniq_labels_edge[depth].add(edge.label)
 
         # Step 4. relabeling for nodes
         for depth in range(max_depth + 1):
             uniques = list(uniq_labels_node[depth])
-            for node in g_first.nodes[depth]:
-                node.label = str(
-                    (iteration + 1) * start_label_nodes[depth] + uniques.index(node.label)
+            for node in left_graph.nodes[depth]:
+                node.prev_label = str(
+                    start_label_nodes[depth] + uniques.index(node.label)
                 )
-                node.prev_label = node.label
-
-            for node in g_second.nodes[depth]:
-                node.label = str(
-                    (iteration + 1) * start_label_nodes[depth] + uniques.index(node.label)
+                # node.label = node.prev_label
+            for node in right_graph.nodes[depth]:
+                node.prev_label = str(
+                    start_label_nodes[depth] + uniques.index(node.label)
                 )
-                node.prev_label = node.label
+                # node.label = node.prev_label
             start_label_nodes[depth] += len(uniques)
 
         # Step 4. relabeling for edges
         for depth in range(max_depth):
             uniques = list(uniq_labels_edge[depth])
-            for edge in g_first.edges[depth]:
-                edge.label = str(
-                    (iteration + 1) * start_label_edges[depth] + uniques.index(edge.label)
+            for edge in left_graph.edges[depth]:
+                edge.prev_label = str(
+                    start_label_edges[depth] + uniques.index(edge.label)
                 )
-                edge.prev_label = edge.label
-            for edge in g_second.edges[depth]:
-                edge.label = str(
-                    (iteration + 1) * start_label_edges[depth] + uniques.index(edge.label)
+                # edge.label = edge.prev_label
+            for edge in right_graph.edges[depth]:
+                edge.prev_label = str(
+                    start_label_edges[depth] + uniques.index(edge.label)
                 )
-                edge.prev_label = edge.label
+                # edge.label = edge.prev_label
             start_label_edges[depth] += len(uniques)
+
+        left_graph.update_labels(max_depth)
+        right_graph.update_labels(max_depth)

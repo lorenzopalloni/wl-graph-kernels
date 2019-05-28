@@ -85,20 +85,47 @@ def test_wlrdfgraph_init():
     # depth 4
     assert root in g.nodes[max_depth]
     assert len(g.nodes[4]) == 1
+    assert len(g.edges[4]) == 0
     # depth 3
     assert wlkernel.Node(label='C', depth=3) in g.nodes[3]
     assert wlkernel.Node(label='D', depth=3) in g.nodes[3]
     assert len(g.nodes[3]) == 2
+    assert wlkernel.Edge(root, wlkernel.Node('C', 3), 'P2', 3) in g.edges[3]
+    assert wlkernel.Edge(root, wlkernel.Node('D', 3), 'P3', 3) in g.edges[3]
+    assert len(g.edges[3]) == 2
     # depth 2
     assert wlkernel.Node(label='H', depth=2) in g.nodes[2]
     assert len(g.nodes[2]) == 1
+    assert (
+            wlkernel.Edge(wlkernel.Node('C', 3),
+                          wlkernel.Node('H', 2), 'P4', 2) in g.edges[2]
+    )
+    assert (
+            wlkernel.Edge(wlkernel.Node('D', 3),
+                          wlkernel.Node('H', 2), 'P4', 2) in g.edges[2]
+    )
+    assert len(g.edges[2]) == 2
     # depth 1
     assert wlkernel.Node(label='A2', depth=1) in g.nodes[1]
     assert len(g.nodes[1]) == 1
+    assert (
+            wlkernel.Edge(wlkernel.Node('H', 2),
+                          wlkernel.Node('A2', 1), 'P6', 1) in g.edges[1]
+    )
+    assert len(g.edges[1]) == 1
     # depth 0
     assert wlkernel.Node(label='D', depth=0) in g.nodes[0]
     assert wlkernel.Node(label='E', depth=0) in g.nodes[0]
     assert len(g.nodes[0]) == 2
+    assert (
+            wlkernel.Edge(wlkernel.Node('A2', 1),
+                          wlkernel.Node('D', 0), 'P2', 0) in g.edges[0]
+    )
+    assert (
+            wlkernel.Edge(wlkernel.Node('A2', 1),
+                          wlkernel.Node('E', 0), 'P3', 0) in g.edges[0]
+    )
+    assert len(g.edges[0]) == 2
 
 
 def test_wlrdfgraph_repr():

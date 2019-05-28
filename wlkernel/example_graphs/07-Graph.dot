@@ -3,6 +3,8 @@ digraph G {
     color = "blue2";
     node [color = "blue2", fontcolor = "blue2"];
     edge [fontsize = 12];
+    A [style = "dotted"]
+    B [style = "dotted"]
     A1 -> A [label = "P1", style = "dotted"]
     A2 -> A [label = "P1", style = "dotted"]
     B2 -> B [label = "P1", style = "dotted"]
