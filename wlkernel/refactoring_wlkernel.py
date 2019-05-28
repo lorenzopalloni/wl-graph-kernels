@@ -157,17 +157,6 @@ def relabel(left_graph: WLRDFGraph, right_graph: WLRDFGraph, max_depth: int,
         label_mapping = label_compression(uniq_labels, start_index_label)
         start_index_label += len(uniq_labels)
 
-        from pprint import pprint
-        # for e in chain(left_graph.all_nodes(), left_graph.all_edges(),
-        #                 right_graph.all_nodes(), right_graph.all_edges()):
-        #     print('hole', e)
-        # exit()
-
-        # for element in chain(left_graph.all_nodes(), left_graph.all_edges(),
-        #                      right_graph.all_nodes(), right_graph.all_edges()):
-        #     multiset_label = multiset_mapping[element]
-        #     element.label = label_mapping[multiset_label]
-
         for element in chain(right_graph.all_nodes(), left_graph.all_nodes()):
             multiset_label = multiset_mapping[element]
             element.label = label_mapping[multiset_label]
