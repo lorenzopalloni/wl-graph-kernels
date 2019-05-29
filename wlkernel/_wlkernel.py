@@ -4,7 +4,7 @@ from itertools import chain
 from typing import NoReturn, List, Set, Dict
 
 
-class Node:
+class WLRDFNode:
     'A node of a Weisfeiler-Lehman RDF graph'
 
     def __init__(self, label: str, depth: int):
@@ -17,22 +17,21 @@ class Node:
         self.neighbors.append(edge)
 
     def __repr__(self):
-        return f"Node(label='{self.label}', depth={self.depth})"
+        return f"WLRDFNode(label='{self.label}', depth={self.depth})"
 
     def __str__(self):
         return f'{self.label}-{self.depth}'
-
-    def __hash__(self):
-        return hash(self.label)
 
     def __eq__(self, node):
         return self.label == node.label and self.depth == node.depth
 
 
-class Edge:
+class WLRDFEdge:
     'An edge of a Weisfeiler-Lehman RDF graph'
 
-    def __init__(self, source: Node, dest: Node, label: str, depth: int):
+    def __init__(
+        self, source: WLRDFNode, dest: WLRDFNode, label: str, depth: int
+    ):
         self.source = source
         self.dest = dest
         self.label = label
@@ -41,7 +40,7 @@ class Edge:
 
     def __repr__(self):
         return (
-            f'Edge(source={repr(self.source)}, dest={repr(self.dest)}, '
+            f'WLRDFEdge(source={repr(self.source)}, dest={repr(self.dest)}, '
             f"label='{self.label}', depth={self.depth})"
         )
 
@@ -53,19 +52,16 @@ class Edge:
 
     def __eq__(self, edge):
         return (
-                self.source == edge.source and self.dest == edge.dest
-                and self.label == edge.label and self.depth == edge.depth
+            self.source == edge.source and self.dest == edge.dest
+            and self.label == edge.label and self.depth == edge.depth
         )
-
-    def __hash__(self):
-        return hash(self.label)
 
 
 class WLRDFGraph:
     'Weisfeiler-Lehman RDF subgraph'
 
     def __init__(self, instance: str, graph: rdflib.Graph, max_depth: int):
-        self.root = Node(label=instance, depth=max_depth)
+        self.root = WLRDFNode(label=instance, depth=max_depth)
         self.nodes = defaultdict(list, {max_depth: [self.root]})
         self.edges = defaultdict(list)
 
@@ -79,31 +75,46 @@ class WLRDFGraph:
                     for (s, p, o) in graph if str(s) == parent.label
                 ]
                 for (subj, pred, obj) in triples:
-                    child = Node(obj, depth)
-                    edge = Edge(parent, child, pred, depth)
-                    new_search_front.append(child)
+                    child = WLRDFNode(obj, depth)
+                    if child in self.nodes[depth]:
+                        child = self.get_node(obj, depth)
+                    edge = WLRDFEdge(parent, child, pred, depth)
+
+                    if child not in new_search_front:
+                        new_search_front.append(child)
 
                     child.add_neighbor(edge)
-                    edge.neighbor = child
+                    edge.neighbor = parent
 
                     if child not in self.nodes[depth]:
                         self.nodes[depth].append(child)
-                    if edge not in self.edges[depth]:
-                        self.edges[depth].append(edge)
+                    self.edges[depth].append(edge)
             search_front = new_search_front
 
         # cleanup the root and the relative edges
-        self.nodes[max_depth][0].label = ''
+        self.nodes[max_depth][0].label = 'root'
 
         for edge in self.edges[max_depth - 1]:
             if instance == edge.source.label:
                 edge.source.label = ''
 
-    def __repr__(self):
-        return repr(self.edges)
+    def get_node(self, label: str, depth: int):
+        'Return the corresponding WLRDFNode object'
+        for node in self.nodes[depth]:
+            if node.label == label:
+                return node
+        else:
+            raise RuntimeError('The specified node is not in the graph')
 
-    def __str__(self):
-        return str(self.edges)
+    def get_edge(self, source_label: str, dest_label: str, edge_label: str,
+                 depth: int):
+        'Return the corresponding WLRDFEdge object'
+        for edge in self.edges[depth]:
+            if (edge.label == edge_label and edge.source.label == source_label
+                and edge.dest.label == dest_label):
+                return edge
+        else:
+            raise RuntimeError('The specified edge is not in the graph')
 
     def all_nodes(self):
         return ( node for node in chain.from_iterable(self.nodes.values()) )
@@ -111,17 +122,14 @@ class WLRDFGraph:
     def all_edges(self):
         return ( edge for edge in chain.from_iterable(self.edges.values()) )
 
-    # def update_labels(self, max_depth: int) -> NoReturn:
-    #     'Assign to the label the value of prev_value for each node and edge.'
-    #     for depth in range(max_depth + 1):
-    #         for node in self.nodes[depth]:
-    #             node.label = node.prev_label
-    #     for depth in range(max_depth):
-    #         for edge in self.edges[depth]:
-    #             edge.label = edge.prev_label
+    def __repr__(self):
+        return repr(self.edges)
+
+    def __str__(self):
+        return str(self.edges)
 
 
-def get_multiset_label(edges: List[Edge]) -> str:
+def get_multiset_label(edges: List[WLRDFEdge]) -> str:
     'Sort and concatenate the labels of a list of edges into a string.'
     edges_sorted = sorted(edges, key=(lambda e: e.label))
     return ''.join(edge.label for edge in edges_sorted)
