@@ -1,0 +1,6 @@
+README.md
+setup.py
+wlkernel.egg-info/PKG-INFO
+wlkernel.egg-info/SOURCES.txt
+wlkernel.egg-info/dependency_links.txt
+wlkernel.egg-info/top_level.txt
