@@ -1,0 +1,62 @@
+digraph G {
+    
+    newrank = true;
+
+    color = "aquamarin4";
+    node [color = "aquamarine4", fontcolor = "aquamarine4"];
+    root [label = "0", fontcolor = "red2"];
+    right_root [label = "0", fontcolor = "red2"];
+    depth_4_node[label = "d = 4", shape = plaintext, fontcolor = "aquamarine4"];
+    {rank = same; depth_4_node; root; right_root};
+    
+    color = "blue4";
+    node [color = "blue4", fontcolor = "blue4"];
+    edge [color = "blue4", fontsize = 10, fontcolor = "blue4"];
+    C [label = "3"];
+    D [label = "4"];
+    root -> C [label = "1", fontcolor = "red2"];
+    root -> D [label = "2", fontcolor = "red2"];
+    right_F [label = "5"];
+    right_G [label = "6"];
+    right_root -> right_F [label = "2", fontcolor = "red2"];
+    right_root -> right_G [label = "1", fontcolor = "red2"];
+    depth_3_node[label = "d = 3", shape = plaintext, fontcolor = "blue4"];
+    {rank = same; depth_3_node; C; D; right_F; right_G};
+    
+    color = "pink";
+    node [color = "pink", fontcolor = "pink"];
+    edge [color = "pink", fontsize = 10, fontcolor = "pink"];
+    H [label = "11"];
+    C -> H [label = "7"];
+    D -> H [label = "8"];
+    right_I [label = "12"];
+    right_F -> right_I [label = "9"];
+    right_G -> right_I [label = "10"];
+    depth_2_node[label = "d = 2", shape = plaintext, fontcolor = "pink"];
+    {rank = same; depth_2_node; H; right_I};
+
+    
+    color = "darkorchid4";
+    node [color = "darkorchid4", fontcolor = "darkorchid4"];
+    edge [color = "darkorchid4", fontsize = 10, fontcolor = "darkorchid4"];
+    A2 [label = "15"]
+    H -> A2 [label = "13"];
+    right_B2 [label = "16"];
+    right_I -> right_B2 [label = "14"];
+    depth_1_node[label = "d = 1", shape = plaintext, fontcolor = "darkorchid4"];
+    {rank = same; depth_1_node; right_B2; A2};
+
+    color = "green1";
+    node [color = "green4", fontcolor = "green4"];
+    edge [color = "green4", fontsize = 10, fontcolor = "green4"];
+    D_0 [label = "21"];
+    E_0 [label = "22", fontcolor = "red2"];
+    F_0 [label = "23"];
+    A2 -> D_0 [label = "17"];
+    A2 -> E_0 [label = "18"];
+    right_B2 -> E_0 [label = "19"];
+    right_B2 -> F_0 [label = "20"];
+
+    depth_0_node[label = "d = 0", shape = plaintext, fontcolor = "green4"];
+    {rank = same; depth_0_node; D_0; E_0; F_0};
+}

@@ -8,4 +8,5 @@ max_depth = 4
 g_first = WLRDFGraph('A1', graph, max_depth)
 g_second = WLRDFGraph('B1', graph, max_depth)
 # g_third = WLRDFGraph('A2', graph, max_depth)
-relabel(g_first, g_second, max_depth, 1)
+relabel(g_first, g_second, 1)
+

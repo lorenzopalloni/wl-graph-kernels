@@ -9,7 +9,16 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="69492a05-ee98-497a-ab16-4a326fe70153" name="Default Changelist" comment="" />
+    <list default="true" id="69492a05-ee98-497a-ab16-4a326fe70153" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wlkernel/example_graphs/07-subGraph_A1_B1.dot" beforeDir="false" afterPath="$PROJECT_DIR$/wlkernel/example_graphs/07-subGraph_A1_B1.dot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wlkernel/example_graphs/07-subGraph_A1_B1.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/wlkernel/example_graphs/07-subGraph_A1_B1.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wlkernel/prova.py" beforeDir="false" afterPath="$PROJECT_DIR$/wlkernel/prova.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wlkernel/refactoring_wlkernel.py" beforeDir="false" afterPath="$PROJECT_DIR$/wlkernel/refactoring_wlkernel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wlkernel/testing_inner_functions.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/wlkernel/testing_inner_functions.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py" beforeDir="false" afterPath="$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wlkernel/wlkernel.py" beforeDir="false" afterPath="$PROJECT_DIR$/wlkernel/wlkernel.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,97 +43,56 @@
     <select />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.35420394">
-      <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/main.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="442">
-                  <caret line="28" column="18" selection-start-line="28" selection-start-column="18" selection-end-line="28" selection-end-column="18" />
-                  <folding>
-                    <element signature="e#0#13#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/wlkernel/wlkernel.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="595">
-                  <caret line="136" column="40" selection-start-line="136" selection-start-column="40" selection-end-line="136" selection-end-column="40" />
-                  <folding>
-                    <element signature="e#0#13#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2278">
-                  <caret line="137" column="12" selection-start-line="137" selection-start-column="12" selection-end-line="137" selection-end-column="12" />
-                  <folding>
-                    <element signature="e#0#13#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/data/head_Lexicon_NamedRockUnit.nt">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="510">
-                  <caret line="30" column="145" selection-start-line="30" selection-start-column="145" selection-end-line="30" selection-end-column="145" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/wlkernel/prova.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="187">
-                  <caret line="11" selection-start-line="11" selection-end-line="11" />
-                  <folding>
-                    <element signature="e#0#13#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2176">
-                  <caret line="128" selection-start-line="128" selection-end-line="128" />
-                  <folding>
-                    <element signature="e#0#13#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/wlkernel/refactoring_wlkernel.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="585">
-                  <caret line="169" selection-start-line="169" selection-end-line="169" />
-                  <folding>
-                    <element signature="e#0#13#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="85">
+              <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+              <folding>
+                <element signature="e#0#13#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/wlkernel/wlkernel.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2567">
+              <caret line="151" column="32" selection-start-line="151" selection-start-column="32" selection-end-line="151" selection-end-column="32" />
+              <folding>
+                <element signature="e#0#13#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="380">
+              <caret line="137" column="12" selection-start-line="137" selection-start-column="12" selection-end-line="137" selection-end-column="12" />
+              <folding>
+                <element signature="e#0#13#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/wlkernel/prova.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="12" selection-start-line="12" selection-end-line="12" />
+              <folding>
+                <element signature="e#0#13#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -151,10 +119,10 @@
         <option value="$PROJECT_DIR$/main.py" />
         <option value="$PROJECT_DIR$/wlkernel/example.nt" />
         <option value="$PROJECT_DIR$/wlkernel/tests/example.nt" />
-        <option value="$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py" />
-        <option value="$PROJECT_DIR$/wlkernel/wlkernel.py" />
-        <option value="$PROJECT_DIR$/wlkernel/prova.py" />
         <option value="$PROJECT_DIR$/wlkernel/refactoring_wlkernel.py" />
+        <option value="$PROJECT_DIR$/wlkernel/wlkernel.py" />
+        <option value="$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py" />
+        <option value="$PROJECT_DIR$/wlkernel/prova.py" />
       </list>
     </option>
   </component>
@@ -188,12 +156,6 @@
               <item name="wl-graph-kernels" type="b2602c69:ProjectViewProjectNode" />
               <item name="wl-graph-kernels" type="462c0819:PsiDirectoryNode" />
               <item name="wlkernel" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="wl-graph-kernels" type="b2602c69:ProjectViewProjectNode" />
-              <item name="wl-graph-kernels" type="462c0819:PsiDirectoryNode" />
-              <item name="wlkernel" type="462c0819:PsiDirectoryNode" />
-              <item name="tests" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -291,6 +253,7 @@
       <workItem from="1559028144515" duration="1072000" />
       <workItem from="1559035198625" duration="1209000" />
       <workItem from="1559046174978" duration="14608000" />
+      <workItem from="1559135079682" duration="2537000" />
     </task>
     <servers />
   </component>
@@ -327,13 +290,12 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="107458000" />
+    <option name="totallyTimeSpent" value="111233000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="6" width="1920" height="1074" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.10512273" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1609375" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -347,7 +309,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50053364" side_tool="true" weight="0.12513144" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.4994664" visible="true" weight="0.20294426" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.4994664" visible="true" weight="0.15400411" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.32912722" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -413,23 +375,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="28" column="18" selection-start-line="28" selection-start-column="18" selection-end-line="28" selection-end-column="18" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/data/head_Lexicon_NamedRockUnit.nt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="30" column="145" selection-start-line="30" selection-start-column="145" selection-end-line="30" selection-end-column="145" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/wlkernel/tests/example.ttl">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -440,30 +385,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/data/head_Lexicon_NamedRockUnit.nt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="30" column="145" selection-start-line="30" selection-start-column="145" selection-end-line="30" selection-end-column="145" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/wlkernel/tests/wlkernel_test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2176">
-          <caret line="128" selection-start-line="128" selection-end-line="128" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wlkernel/wlkernel.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="136" column="40" selection-start-line="136" selection-start-column="40" selection-end-line="136" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/wlkernel/prova.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" selection-start-line="11" selection-end-line="11" />
+        <state relative-caret-position="380">
+          <caret line="137" column="12" selection-start-line="137" selection-start-column="12" selection-end-line="137" selection-end-column="12" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
@@ -472,8 +404,38 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/wlkernel/refactoring_wlkernel.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="169" selection-start-line="169" selection-end-line="169" />
+        <state relative-caret-position="686">
+          <caret line="158" selection-start-line="158" selection-end-line="158" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wlkernel/wlkernel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2567">
+          <caret line="151" column="32" selection-start-line="151" selection-start-column="32" selection-end-line="151" selection-end-column="32" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/wlkernel/prova.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" selection-start-line="12" selection-end-line="12" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>

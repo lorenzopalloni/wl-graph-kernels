@@ -149,4 +149,11 @@ def test_wlrdfgraph_repr():
 
 def test_wlrdfgraph_relabel():
     graph = rdflib.Graph().parse('./example.ttl', format='turtle')
-    max_depth = 1
+    max_depth = 4
+    g_left = wlkernel.WLRDFGraph('A1', graph, max_depth)
+    g_right = wlkernel.WLRDFGraph('B1', graph, max_depth)
+    wlkernel.relabel(g_left, g_right, 1)
+    edge_1 = wlkernel.Edge(source=wlkernel.Node(label='12', depth=3),
+                           dest=wlkernel.Node(label='H', depth=2),
+                           label='20', depth=2)
+    assert edge_1 in g_left.edges[2]

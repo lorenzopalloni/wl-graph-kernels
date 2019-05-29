@@ -111,15 +111,6 @@ class WLRDFGraph:
     def all_edges(self):
         return ( edge for edge in chain.from_iterable(self.edges.values()) )
 
-    # def update_labels(self, max_depth: int) -> NoReturn:
-    #     'Assign to the label the value of prev_value for each node and edge.'
-    #     for depth in range(max_depth + 1):
-    #         for node in self.nodes[depth]:
-    #             node.label = node.prev_label
-    #     for depth in range(max_depth):
-    #         for edge in self.edges[depth]:
-    #             edge.label = edge.prev_label
-
 
 def get_multiset_label(edges: List[Edge]) -> str:
     'Sort and concatenate the labels of a list of edges into a string.'
@@ -134,7 +125,7 @@ def label_compression(labels: Set, start_index: int) -> Dict:
     }
 
 
-def relabel(left_graph: WLRDFGraph, right_graph: WLRDFGraph, max_depth: int,
+def relabel(left_graph: WLRDFGraph, right_graph: WLRDFGraph,
             max_iteration: int) -> NoReturn:
     'Weisfeiler-Lehman Relabeling for RDF subgraph'
 
@@ -160,11 +151,9 @@ def relabel(left_graph: WLRDFGraph, right_graph: WLRDFGraph, max_depth: int,
         for element in chain(right_graph.all_nodes(), left_graph.all_nodes()):
             multiset_label = multiset_mapping[element]
             element.label = label_mapping[multiset_label]
-        #
+
         for element in chain(right_graph.all_edges(), left_graph.all_edges()):
             multiset_label = multiset_mapping[element]
             element.label = label_mapping[multiset_label]
 
-        # left_graph.update_labels(max_depth)
-        # right_graph.update_labels(max_depth)
 

@@ -1,6 +1,7 @@
 import rdflib
 from collections import defaultdict
-from typing import NoReturn, List
+from itertools import chain
+from typing import NoReturn, List, Set, Dict
 
 
 class Node:
@@ -10,7 +11,6 @@ class Node:
         self.label = label
         self.depth = depth
         self.neighbors = []
-        self.prev_label = label
 
     def add_neighbor(self, edge):
         'Add an edge as a neighbor'
@@ -21,6 +21,9 @@ class Node:
 
     def __str__(self):
         return f'{self.label}-{self.depth}'
+
+    def __hash__(self):
+        return hash(self.label)
 
     def __eq__(self, node):
         return self.label == node.label and self.depth == node.depth
@@ -35,7 +38,6 @@ class Edge:
         self.label = label
         self.depth = depth
         self.neighbor = None
-        self.prev_label = label
 
     def __repr__(self):
         return (
@@ -51,9 +53,12 @@ class Edge:
 
     def __eq__(self, edge):
         return (
-            self.source == edge.source and self.dest == edge.dest
-            and self.label == edge.label and self.depth == edge.depth
+                self.source == edge.source and self.dest == edge.dest
+                and self.label == edge.label and self.depth == edge.depth
         )
+
+    def __hash__(self):
+        return hash(self.label)
 
 
 class WLRDFGraph:
@@ -89,12 +94,10 @@ class WLRDFGraph:
 
         # cleanup the root and the relative edges
         self.nodes[max_depth][0].label = ''
-        self.nodes[max_depth][0].prev_label = ''
 
         for edge in self.edges[max_depth - 1]:
             if instance == edge.source.label:
                 edge.source.label = ''
-                edge.source.prev_label = ''
 
     def __repr__(self):
         return repr(self.edges)
@@ -102,79 +105,54 @@ class WLRDFGraph:
     def __str__(self):
         return str(self.edges)
 
-    def update_labels(self, max_depth: int) -> NoReturn:
-        'Assign to the label the value of prev_value for each node and edge.'
-        for depth in range(max_depth + 1):
-            for node in self.nodes[depth]:
-                node.label = node.prev_label
-        for depth in range(max_depth):
-            for edge in self.edges[depth]:
-                edge.label = edge.prev_label
+    def all_nodes(self):
+        return ( node for node in chain.from_iterable(self.nodes.values()) )
+
+    def all_edges(self):
+        return ( edge for edge in chain.from_iterable(self.edges.values()) )
 
 
 def get_multiset_label(edges: List[Edge]) -> str:
     'Sort and concatenate the labels of a list of edges into a string.'
-    edges_sorted = sorted(edges, key=(lambda e: e.prev_label))
-    return ''.join(edge.prev_label for edge in edges_sorted)
+    edges_sorted = sorted(edges, key=(lambda e: e.label))
+    return ''.join(edge.label for edge in edges_sorted)
 
 
-def relabel(left_graph: WLRDFGraph, right_graph: WLRDFGraph, max_depth: int,
+def label_compression(labels: Set, start_index: int) -> Dict:
+    return {
+        multiset_label: str(new_label + start_index)
+        for new_label, multiset_label in enumerate(labels)
+    }
+
+
+def relabel(left_graph: WLRDFGraph, right_graph: WLRDFGraph,
             max_iteration: int) -> NoReturn:
     'Weisfeiler-Lehman Relabeling for RDF subgraph'
 
-    start_label_nodes = defaultdict(int)
-    start_label_edges = defaultdict(int)
+    start_index_label = 0
 
     for iteration in range(max_iteration):
-        # Steps 1. 2. and 3. of the algorithm 3. for nodes
-        uniq_labels_node = defaultdict(set)
-        for depth in range(max_depth + 1):
-            for node in left_graph.nodes[depth]:
-                node.label += get_multiset_label(node.neighbors)
-                uniq_labels_node[depth].add(node.label)
-            for node in right_graph.nodes[depth]:
-                node.label += get_multiset_label(node.neighbors)
-                uniq_labels_node[depth].add(node.label)
+        uniq_labels = set()
+        multiset_mapping = dict()
 
-        # Steps 1. 2. and 3. of the algorithm 3. for edges
-        uniq_labels_edge = defaultdict(set)
-        for depth in range(max_depth):
-            for edge in left_graph.edges[depth]:
-                edge.label += edge.neighbor.prev_label
-                uniq_labels_edge[depth].add(edge.label)
-            for edge in right_graph.edges[depth]:
-                edge.label += edge.neighbor.prev_label
-                uniq_labels_edge[depth].add(edge.label)
+        for node in chain(left_graph.all_nodes(), right_graph.all_nodes()):
+            new_label = node.label + get_multiset_label(node.neighbors)
+            uniq_labels.add(new_label)
+            multiset_mapping[node] = new_label
 
-        # Step 4. relabeling for nodes
-        for depth in range(max_depth + 1):
-            uniques = list(uniq_labels_node[depth])
-            for node in left_graph.nodes[depth]:
-                node.prev_label = str(
-                    start_label_nodes[depth] + uniques.index(node.label)
-                )
-                # node.label = node.prev_label
-            for node in right_graph.nodes[depth]:
-                node.prev_label = str(
-                    start_label_nodes[depth] + uniques.index(node.label)
-                )
-                # node.label = node.prev_label
-            start_label_nodes[depth] += len(uniques)
+        for edge in chain(left_graph.all_edges(), right_graph.all_edges()):
+            new_label = edge.label + edge.neighbor.label
+            uniq_labels.add(new_label)
+            multiset_mapping[edge] = new_label
 
-        # Step 4. relabeling for edges
-        for depth in range(max_depth):
-            uniques = list(uniq_labels_edge[depth])
-            for edge in left_graph.edges[depth]:
-                edge.prev_label = str(
-                    start_label_edges[depth] + uniques.index(edge.label)
-                )
-                # edge.label = edge.prev_label
-            for edge in right_graph.edges[depth]:
-                edge.prev_label = str(
-                    start_label_edges[depth] + uniques.index(edge.label)
-                )
-                # edge.label = edge.prev_label
-            start_label_edges[depth] += len(uniques)
+        label_mapping = label_compression(uniq_labels, start_index_label)
+        start_index_label += len(uniq_labels)
 
-        left_graph.update_labels(max_depth)
-        right_graph.update_labels(max_depth)
+        for element in chain(right_graph.all_nodes(), left_graph.all_nodes()):
+            multiset_label = multiset_mapping[element]
+            element.label = label_mapping[multiset_label]
+
+        for element in chain(right_graph.all_edges(), left_graph.all_edges()):
+            multiset_label = multiset_mapping[element]
+            element.label = label_mapping[multiset_label]
+
