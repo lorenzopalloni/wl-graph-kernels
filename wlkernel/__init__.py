@@ -2,5 +2,5 @@ __version__ = '0.1'
 
 
 from ._wlkernel import (
-    WLRDFNode, WLRDFEdge, WLRDFSubgraph, relabel,
+    WLRDFNode, WLRDFEdge, WLRDFSubgraph, relabel, wl_kernel,
 )

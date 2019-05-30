@@ -190,9 +190,7 @@ def test_graph_relabeling():
     rdf_graph = rdflib.Graph().parse(example_data, format='turtle')
     wl_graph_a1 = wlkernel.WLRDFSubgraph('A1', rdf_graph, 4)
     wl_graph_b1 = wlkernel.WLRDFSubgraph('B1', rdf_graph, 4)
-    a1_relabeled, b1_relabeled = wlkernel.relabel(
-        [wl_graph_a1, wl_graph_b1], iterations=1
-    )
+    a1_relabeled, b1_relabeled = wlkernel.relabel(wl_graph_a1, wl_graph_b1)
 
     assert (
         a1_relabeled.root == b1_relabeled.root
@@ -242,3 +240,13 @@ def test_graph_relabeling():
     ]
     assert len(node_labels) == 4
     assert len(set(node_labels)) == 3
+
+
+def wl_kernel_test():
+    rdf_graph = rdflib.Graph().parse(example_data, format='turtle')
+    wl_graph_a1 = wlkernel.WLRDFSubgraph('A1', rdf_graph, 4)
+    wl_graph_b1 = wlkernel.WLRDFSubgraph('B1', rdf_graph, 4)
+    assert wlkernel.wl_kernel(wl_graph_a1, wl_graph_b1) == 6
+
+    a1_relabeled, b1_relabeled = wlkernel.relabel(wl_graph_a1, wl_graph_b1)
+    assert wlkernel.wl_kernel(wl_graph_a1, wl_graph_b1) == 4

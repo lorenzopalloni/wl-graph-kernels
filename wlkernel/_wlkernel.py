@@ -1,7 +1,7 @@
-from collections import defaultdict
+from collections import defaultdict, Counter
 from itertools import chain
-from typing import List, Dict, Iterable
-from copy import deepcopy
+from typing import Tuple, Dict, Iterable
+from copy import copy
 
 import rdflib
 
@@ -68,6 +68,7 @@ class WLRDFSubgraph:
         self.root = WLRDFNode(label=instance, depth=max_depth)
         self.nodes = defaultdict(list, {max_depth: [self.root]})
         self.edges = defaultdict(list)
+        self.max_depth = max_depth
 
         search_front = [self.root]
 
@@ -146,35 +147,53 @@ def label_compression(labels: Iterable, start_index: int) -> Dict:
     }
 
 
-def relabel(subgraphs: List[WLRDFSubgraph],
-            iterations: int) -> List[WLRDFSubgraph]:
+def relabel(subgraph_1: WLRDFSubgraph,
+            subgraph_2: WLRDFSubgraph) -> Tuple[WLRDFSubgraph]:
     'Weisfeiler-Lehman Relabeling for RDF subgraph'
 
-    subgraphs = deepcopy(subgraphs)
+    subgraph_1 = copy(subgraph_1)
+    subgraph_2 = copy(subgraph_2)
 
     start_index_label = 0
+    uniq_labels = set()
 
-    for iteration in range(iterations):
-        uniq_labels = set()
+    for node in chain(subgraph_1.all_nodes(), subgraph_2.all_nodes()):
+        multiset_label = get_multiset_label(node)
+        node.label_extension = multiset_label
+        uniq_labels.add(node.label + multiset_label)
 
-        for subgraph in subgraphs:
-            for node in subgraph.all_nodes():
-                multiset_label = get_multiset_label(node)
-                node.label_extension = multiset_label
-                uniq_labels.add(node.label + multiset_label)
+    for edge in chain(subgraph_1.all_edges(), subgraph_2.all_edges()):
+        multiset_label = edge.neighbor.label
+        edge.label_extension = multiset_label
+        uniq_labels.add(edge.label + multiset_label)
 
-            for edge in subgraph.all_edges():
-                multiset_label = edge.neighbor.label
-                edge.label_extension = multiset_label
-                uniq_labels.add(edge.label + multiset_label)
+    label_mapping = label_compression(sorted(uniq_labels), start_index_label)
+    start_index_label += len(uniq_labels)
 
-        label_mapping = label_compression(sorted(uniq_labels), start_index_label)
-        start_index_label += len(uniq_labels)
+    for node in chain(subgraph_1.all_nodes(), subgraph_2.all_nodes()):
+        node.label = label_mapping[node.label + node.label_extension]
 
-        for subgraph in subgraphs:
-            for node in subgraph.all_nodes():
-                node.label = label_mapping[node.label + node.label_extension]
+    for edge in chain(subgraph_1.all_edges(), subgraph_2.all_edges()):
+        edge.label = label_mapping[edge.label + edge.label_extension]
+    return subgraph_1, subgraph_2
 
-            for edge in subgraph.all_edges():
-                edge.label = label_mapping[edge.label + edge.label_extension]
-    return subgraphs
+
+def count_common(list1: Iterable[str], list2: Iterable[str]):
+    'Return the number of common elements in the two iterables'
+    commons = 0
+    for e in list1:
+        if e in list2:
+            commons += 1
+    for e in list2:
+        if e in list1:
+            commons += 1
+    return commons
+
+
+def wl_kernel(g1: WLRDFSubgraph, g2: WLRDFSubgraph) -> int:
+    kernel = 0
+    for depth in g1.max_depth:
+        g1_labels = [e.label for e in chain(g1.nodes[depth], g1.edges[depth])]
+        g2_labels = [e.label for e in chain(g2.nodes[depth], g2.edges[depth])]
+    kernel += count_common(g1_labels, g2_labels)
+    return kernel
