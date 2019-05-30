@@ -1,6 +1,7 @@
 from collections import defaultdict
 from itertools import chain
-from typing import NoReturn, List, Set, Dict
+from typing import List, Dict, Iterable
+from copy import deepcopy
 
 import rdflib
 
@@ -10,6 +11,7 @@ class WLRDFNode:
 
     def __init__(self, label: str, depth: int):
         self.label = label
+        self.label_expansion = ''
         self.depth = depth
         self.neighbors = []
 
@@ -36,6 +38,7 @@ class WLRDFEdge:
         self.source = source
         self.dest = dest
         self.label = label
+        self.label_expansion = ''
         self.depth = depth
         self.neighbor = None
 
@@ -58,7 +61,7 @@ class WLRDFEdge:
         )
 
 
-class WLRDFGraph:
+class WLRDFSubgraph:
     'Weisfeiler-Lehman RDF subgraph'
 
     def __init__(self, instance: str, graph: rdflib.Graph, max_depth: int):
@@ -130,50 +133,48 @@ class WLRDFGraph:
         return str(self.edges)
 
 
-def get_multiset_label(edges: List[WLRDFEdge]) -> str:
-    'Sort and concatenate the labels of a list of edges into a string.'
-    edges_sorted = sorted(edges, key=(lambda e: e.label))
+def get_multiset_label(node: WLRDFNode) -> str:
+    'Sort and concatenate the labels of the neighbors of a node'
+    edges_sorted = sorted(node.neighbors, key=(lambda e: e.label))
     return ''.join(edge.label for edge in edges_sorted)
 
 
-def label_compression(labels: Set, start_index: int) -> Dict:
+def label_compression(labels: Iterable, start_index: int) -> Dict:
     return {
         multiset_label: str(new_label + start_index)
         for new_label, multiset_label in enumerate(labels)
     }
 
 
-def relabel(left_graph: WLRDFGraph, right_graph: WLRDFGraph, max_depth: int,
-            max_iteration: int) -> NoReturn:
+def relabel(subgraphs: List[WLRDFSubgraph],
+            iterations: int) -> List[WLRDFSubgraph]:
     'Weisfeiler-Lehman Relabeling for RDF subgraph'
+
+    subgraphs = deepcopy(subgraphs)
 
     start_index_label = 0
 
-    for iteration in range(max_iteration):
+    for iteration in range(iterations):
         uniq_labels = set()
-        multiset_mapping = dict()
 
-        for node in chain(left_graph.all_nodes(), right_graph.all_nodes()):
-            new_label = node.label + get_multiset_label(node.neighbors)
-            uniq_labels.add(new_label)
-            multiset_mapping[node] = new_label
+        for subgraph in subgraphs:
+            for node in subgraph.all_nodes():
+                multiset_label = get_multiset_label(node)
+                node.label_extension = multiset_label
+                uniq_labels.add(node.label + multiset_label)
 
-        for edge in chain(left_graph.all_edges(), right_graph.all_edges()):
-            new_label = edge.label + edge.neighbor.label
-            uniq_labels.add(new_label)
-            multiset_mapping[edge] = new_label
+            for edge in subgraph.all_edges():
+                multiset_label = edge.neighbor.label
+                edge.label_extension = multiset_label
+                uniq_labels.add(edge.label + multiset_label)
 
-        label_mapping = label_compression(uniq_labels, start_index_label)
+        label_mapping = label_compression(sorted(uniq_labels), start_index_label)
         start_index_label += len(uniq_labels)
 
-        for element in chain(right_graph.all_nodes(), left_graph.all_nodes()):
-            multiset_label = multiset_mapping[element]
-            element.label = label_mapping[multiset_label]
-        #
-        for element in chain(right_graph.all_edges(), left_graph.all_edges()):
-            multiset_label = multiset_mapping[element]
-            element.label = label_mapping[multiset_label]
+        for subgraph in subgraphs:
+            for node in subgraph.all_nodes():
+                node.label = label_mapping[node.label + node.label_extension]
 
-        # left_graph.update_labels(max_depth)
-        # right_graph.update_labels(max_depth)
-
+            for edge in subgraph.all_edges():
+                edge.label = label_mapping[edge.label + edge.label_extension]
+    return subgraphs

@@ -1,5 +1,6 @@
 from os.path import abspath
 from pkg_resources import resource_filename
+from itertools import chain
 
 import pytest
 import rdflib
@@ -82,7 +83,7 @@ def test_wlrdfgraph_depth_0():
     ######
     '''
     rdf_graph = rdflib.Graph().parse(example_data, format='turtle')
-    wl_graph = wlkernel.WLRDFGraph('A1', rdf_graph, 0)
+    wl_graph = wlkernel.WLRDFSubgraph('A1', rdf_graph, 0)
 
     root = wl_graph.get_node('root', 0)
     assert [root] == wl_graph.nodes[0]
@@ -105,7 +106,7 @@ def test_wlrdfgraph_depth_1():
     #####        #####
     '''
     rdf_graph = rdflib.Graph().parse(example_data, format='turtle')
-    wl_graph = wlkernel.WLRDFGraph('A1', rdf_graph, 1)
+    wl_graph = wlkernel.WLRDFSubgraph('A1', rdf_graph, 1)
 
     root = wl_graph.get_node('root', 1)
     assert [root] == wl_graph.nodes[1]
@@ -147,7 +148,7 @@ def test_wlrdfgraph_depth_2():
           #####
     '''
     rdf_graph = rdflib.Graph().parse(example_data, format='turtle')
-    wl_graph = wlkernel.WLRDFGraph('A1', rdf_graph, 2)
+    wl_graph = wlkernel.WLRDFSubgraph('A1', rdf_graph, 2)
 
     root = wl_graph.get_node('root', 2)
     assert [root] == wl_graph.nodes[2]
@@ -185,76 +186,59 @@ def test_wlrdfgraph_depth_2():
     assert len(h_node.neighbors) == 2
 
 
-#def test_wlrdfgraph_init():
-#    graph = rdflib.Graph().parse('./example.ttl', format='turtle')
-#
-#    max_depth = 4
-#    g = wlkernel.WLRDFGraph(
-#        instance='A1', graph=graph, max_depth=max_depth
-#    )
-#    assert wlkernel.WLRDFNode('A1', depth=max_depth) not in g.nodes[0]
-#
-#    root = wlkernel.WLRDFNode(label='', depth=max_depth)
-#    # depth 4
-#    assert root in g.nodes[max_depth]
-#    assert len(g.nodes[4]) == 1
-#    assert len(g.edges[4]) == 0
-#    # depth 3
-#    assert wlkernel.WLRDFNode(label='C', depth=3) in g.nodes[3]
-#    assert wlkernel.WLRDFNode(label='D', depth=3) in g.nodes[3]
-#    assert len(g.nodes[3]) == 2
-#    assert wlkernel.WLRDFEdge(root, wlkernel.WLRDFNode('C', 3), 'P2', 3) in g.edges[3]
-#    assert wlkernel.WLRDFEdge(root, wlkernel.WLRDFNode('D', 3), 'P3', 3) in g.edges[3]
-#    assert len(g.edges[3]) == 2
-#    # depth 2
-#    assert wlkernel.WLRDFNode(label='H', depth=2) in g.nodes[2]
-#    assert len(g.nodes[2]) == 1
-#    assert (
-#            wlkernel.WLRDFEdge(wlkernel.WLRDFNode('C', 3),
-#                          wlkernel.WLRDFNode('H', 2), 'P4', 2) in g.edges[2]
-#    )
-#    assert (
-#            wlkernel.WLRDFEdge(wlkernel.WLRDFNode('D', 3),
-#                          wlkernel.WLRDFNode('H', 2), 'P4', 2) in g.edges[2]
-#    )
-#    assert len(g.edges[2]) == 2
-#    # depth 1
-#    assert wlkernel.WLRDFNode(label='A2', depth=1) in g.nodes[1]
-#    assert len(g.nodes[1]) == 1
-#    assert (
-#            wlkernel.WLRDFEdge(wlkernel.WLRDFNode('H', 2),
-#                          wlkernel.WLRDFNode('A2', 1), 'P6', 1) in g.edges[1]
-#    )
-#    assert len(g.edges[1]) == 1
-#    # depth 0
-#    assert wlkernel.WLRDFNode(label='D', depth=0) in g.nodes[0]
-#    assert wlkernel.WLRDFNode(label='E', depth=0) in g.nodes[0]
-#    assert len(g.nodes[0]) == 2
-#    assert (
-#            wlkernel.WLRDFEdge(wlkernel.WLRDFNode('A2', 1),
-#                          wlkernel.WLRDFNode('D', 0), 'P2', 0) in g.edges[0]
-#    )
-#    assert (
-#            wlkernel.WLRDFEdge(wlkernel.WLRDFNode('A2', 1),
-#                          wlkernel.WLRDFNode('E', 0), 'P3', 0) in g.edges[0]
-#    )
-#    assert len(g.edges[0]) == 2
+def test_graph_relabeling():
+    rdf_graph = rdflib.Graph().parse(example_data, format='turtle')
+    wl_graph_a1 = wlkernel.WLRDFSubgraph('A1', rdf_graph, 4)
+    wl_graph_b1 = wlkernel.WLRDFSubgraph('B1', rdf_graph, 4)
+    a1_relabeled, b1_relabeled = wlkernel.relabel(
+        [wl_graph_a1, wl_graph_b1], iterations=1
+    )
 
+    assert (
+        a1_relabeled.root == b1_relabeled.root
+        == a1_relabeled.nodes[4][0] == b1_relabeled.nodes[4][0]
+    )
 
-#def test_wlrdfgraph_repr():
-#    graph = rdflib.Graph().parse('./example.ttl', format='turtle')
-#
-#    max_depth = 1
-#    root = wlkernel.WLRDFNode(label='', depth=max_depth)
-#    wl_rdf_graph = wlkernel.WLRDFGraph('B1', graph, max_depth)
-#    assert root in wl_rdf_graph.nodes[max_depth]
-#    assert (
-#        "defaultdict(<class 'list'>, {0: [WLRDFEdge(source=WLRDFNode(label='', "
-#        "depth=1), dest=WLRDFNode(label='F', depth=0), label='P3', "
-#        "depth=0), WLRDFEdge(source=WLRDFNode(label='', depth=1), dest=WLRDFNode(label='G', "
-#        "depth=0), label='P2', depth=0)]})" == repr(wl_rdf_graph) or
-#        "defaultdict(<class 'list'>, {0: [WLRDFEdge(source=WLRDFNode(label='', depth=1),"
-#        " dest=WLRDFNode(label='G', depth=0), label='P2', depth=0), "
-#        "WLRDFEdge(source=WLRDFNode(label='', depth=1), dest=WLRDFNode(label='F', depth=0), "
-#        "label='P3', depth=0)]})" == repr(wl_rdf_graph)
-#    )
+    edge_labels = [
+        e.label for e in chain(a1_relabeled.edges[3], b1_relabeled.edges[3])
+    ]
+    assert len(edge_labels) == 4
+    assert len(set(edge_labels)) == 2
+    node_labels = [
+        n.label for n in chain(a1_relabeled.nodes[3], b1_relabeled.nodes[3])
+    ]
+    assert len(node_labels) == 4
+    assert len(set(node_labels)) == 4
+
+    edge_labels = [
+        e.label for e in chain(a1_relabeled.edges[2], b1_relabeled.edges[2])
+    ]
+    assert len(edge_labels) == 4
+    assert len(set(edge_labels)) == 4
+    node_labels = [
+        n.label for n in chain(a1_relabeled.nodes[2], b1_relabeled.nodes[2])
+    ]
+    assert len(node_labels) == 2
+    assert len(set(node_labels)) == 2
+
+    edge_labels = [
+        e.label for e in chain(a1_relabeled.edges[1], b1_relabeled.edges[1])
+    ]
+    assert len(edge_labels) == 2
+    assert len(set(edge_labels)) == 2
+    node_labels = [
+        n.label for n in chain(a1_relabeled.nodes[1], b1_relabeled.nodes[1])
+    ]
+    assert len(node_labels) == 2
+    assert len(set(node_labels)) == 2
+
+    edge_labels = [
+        e.label for e in chain(a1_relabeled.edges[0], b1_relabeled.edges[0])
+    ]
+    assert len(edge_labels) == 4
+    assert len(set(edge_labels)) == 4
+    node_labels = [
+        n.label for n in chain(a1_relabeled.nodes[0], b1_relabeled.nodes[0])
+    ]
+    assert len(node_labels) == 4
+    assert len(set(node_labels)) == 3
