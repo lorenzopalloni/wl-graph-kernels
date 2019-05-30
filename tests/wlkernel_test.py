@@ -242,11 +242,25 @@ def test_graph_relabeling():
     assert len(set(node_labels)) == 3
 
 
-def wl_kernel_test():
+def test_wl_kernel():
     rdf_graph = rdflib.Graph().parse(example_data, format='turtle')
     wl_graph_a1 = wlkernel.WLRDFSubgraph('A1', rdf_graph, 4)
     wl_graph_b1 = wlkernel.WLRDFSubgraph('B1', rdf_graph, 4)
-    assert wlkernel.wl_kernel(wl_graph_a1, wl_graph_b1) == 6
+    assert wlkernel.wl_kernel(wl_graph_a1, wl_graph_b1) == 7
 
     a1_relabeled, b1_relabeled = wlkernel.relabel(wl_graph_a1, wl_graph_b1)
     assert wlkernel.wl_kernel(wl_graph_a1, wl_graph_b1) == 4
+
+
+def test_compute_kernel():
+    rdf_graph = rdflib.Graph().parse(example_data, format='turtle')
+    kernel = wlkernel.compute_kernel(rdf_graph, 'A1', 'B1', 4)
+    assert kernel == 7
+
+    rdf_graph = rdflib.Graph().parse(example_data, format='turtle')
+    kernel = wlkernel.compute_kernel(rdf_graph, 'A1', 'B1', 4, iterations=2)
+    assert kernel == 7*1/2 + 4*2/2
+
+    rdf_graph = rdflib.Graph().parse(example_data, format='turtle')
+    kernel = wlkernel.compute_kernel(rdf_graph, 'A1', 'B1', 4, iterations=3)
+    assert kernel == 7*1/3 + 4*2/3 + 3*3/3

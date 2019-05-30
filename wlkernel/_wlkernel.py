@@ -1,4 +1,4 @@
-from collections import defaultdict, Counter
+from collections import defaultdict
 from itertools import chain
 from typing import Tuple, Dict, Iterable
 from copy import copy
@@ -184,16 +184,25 @@ def count_common(list1: Iterable[str], list2: Iterable[str]):
     for e in list1:
         if e in list2:
             commons += 1
-    for e in list2:
-        if e in list1:
-            commons += 1
     return commons
 
 
 def wl_kernel(g1: WLRDFSubgraph, g2: WLRDFSubgraph) -> int:
     kernel = 0
-    for depth in g1.max_depth:
+    for depth in range(g1.max_depth + 1):
         g1_labels = [e.label for e in chain(g1.nodes[depth], g1.edges[depth])]
         g2_labels = [e.label for e in chain(g2.nodes[depth], g2.edges[depth])]
-    kernel += count_common(g1_labels, g2_labels)
+        kernel += count_common(g1_labels, g2_labels)
+    return kernel
+
+
+def compute_kernel(rdf_graph: rdflib.Graph, instance_1: str,
+                   instance_2: str, depth: int, iterations: int = 1) -> int:
+    'Compute the Weisfeiler-Lehman kernel of two RDF instances'
+    subgraph_1 = WLRDFSubgraph(instance_1, rdf_graph, depth)
+    subgraph_2 = WLRDFSubgraph(instance_2, rdf_graph, depth)
+    kernel = 0
+    for i in range(iterations):
+        kernel += (i+1)/iterations * wl_kernel(subgraph_1, subgraph_2)
+        subgraph_1, subgraph_2 = relabel(subgraph_1, subgraph_2)
     return kernel
