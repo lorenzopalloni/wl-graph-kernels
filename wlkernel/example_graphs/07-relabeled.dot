@@ -23,16 +23,16 @@ digraph G {
     depth_3_node[label = "d = 3", shape = plaintext, fontcolor = "blue4"];
     {rank = same; depth_3_node; C; D; right_F; right_G};
     
-    color = "pink";
-    node [color = "pink", fontcolor = "pink"];
-    edge [color = "pink", fontsize = 10, fontcolor = "pink"];
+    color = "cyan4";
+    node [color = "cyan4", fontcolor = "cyan4"];
+    edge [color = "cyan4", fontsize = 10, fontcolor = "cyan4"];
     H [label = "11"];
     C -> H [label = "7"];
     D -> H [label = "8"];
     right_I [label = "12"];
     right_F -> right_I [label = "9"];
     right_G -> right_I [label = "10"];
-    depth_2_node[label = "d = 2", shape = plaintext, fontcolor = "pink"];
+    depth_2_node[label = "d = 2", shape = plaintext, fontcolor = "cyan4"];
     {rank = same; depth_2_node; H; right_I};
 
     
@@ -46,7 +46,7 @@ digraph G {
     depth_1_node[label = "d = 1", shape = plaintext, fontcolor = "darkorchid4"];
     {rank = same; depth_1_node; right_B2; A2};
 
-    color = "green1";
+    color = "green4";
     node [color = "green4", fontcolor = "green4"];
     edge [color = "green4", fontsize = 10, fontcolor = "green4"];
     D_0 [label = "21"];

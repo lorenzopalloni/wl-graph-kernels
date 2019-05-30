@@ -1,0 +1,35 @@
+digraph G {
+    rankdir = LR;
+    color = "blue2";
+    node [color = "blue2", fontcolor = "blue2"];
+    edge [fontsize = 12];
+    A [style = "dotted"]
+    B [style = "dotted"]
+    A1 -> A [label = "P1", style = "dotted"]
+    A2 -> A [label = "P1", style = "dotted"]
+    B2 -> B [label = "P1", style = "dotted"]
+    B1 -> B [label = "P1", style = "dotted"]
+    
+    A1 -> C [label = "P2"]
+    A1 -> D [label = "P3"]
+    A2 -> D [label = "P2"]
+    A2 -> E [label = "P3"]
+    B2 -> E [label = "P3"]
+    B2 -> F [label = "P2"]
+    B1 -> F [label = "P3"]
+    B1 -> G [label = "P2"]
+
+    C -> H [label = "P4"] 
+    D -> H [label = "P4"]
+    F -> I [label = "P5"]
+    G -> I [label = "P5"]
+
+    H -> A2 [label = "P6"]
+    I -> B2 [label = "P6"]
+    
+
+    {rank = min; A; B;}
+    {rank = same; A1; A2; B2; B1;}
+    {rank = same; C; D; E; F; G;}
+    {rank = max; H; I;}
+}
