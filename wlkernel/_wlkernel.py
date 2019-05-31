@@ -1,6 +1,6 @@
 from collections import defaultdict
 from itertools import chain
-from typing import Tuple, Dict, Iterable
+from typing import Tuple, Dict, List, Iterable
 from copy import copy
 
 import rdflib
@@ -178,12 +178,11 @@ def relabel(subgraph_1: WLRDFSubgraph,
     return subgraph_1, subgraph_2
 
 
-def count_common(list1: Iterable[str], list2: Iterable[str]):
-    'Return the number of common elements in the two iterables'
+def count_common(list1: List[str], list2: List[str]):
+    'Return the number of common elements in the two lists'
     commons = 0
     for e in list1:
-        if e in list2:
-            commons += 1
+        commons += list2.count(e)
     return commons
 
 
