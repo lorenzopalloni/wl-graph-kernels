@@ -1,6 +1,6 @@
-from collections import defaultdict
+from collections import defaultdict, Counter
 from itertools import chain
-from typing import Tuple, Dict, List, Iterable
+from typing import Tuple, Dict, Iterable
 from copy import copy
 
 import rdflib
@@ -148,7 +148,7 @@ def label_compression(labels: Iterable, start_index: int) -> Dict:
 
 
 def relabel(subgraph_1: WLRDFSubgraph,
-            subgraph_2: WLRDFSubgraph) -> Tuple[WLRDFSubgraph]:
+            subgraph_2: WLRDFSubgraph) -> Tuple[WLRDFSubgraph, WLRDFSubgraph]:
     'Weisfeiler-Lehman Relabeling for RDF subgraph'
 
     subgraph_1 = copy(subgraph_1)
@@ -178,11 +178,14 @@ def relabel(subgraph_1: WLRDFSubgraph,
     return subgraph_1, subgraph_2
 
 
-def count_common(list1: List[str], list2: List[str]):
-    'Return the number of common elements in the two lists'
+def count_commons(a: Iterable, b: Iterable):
+    'Return the number of common elements in the two iterables'
+    uniques = set(a).intersection(set(b))
+    counter_a = Counter(a)
+    counter_b = Counter(b)
     commons = 0
-    for e in list1:
-        commons += list2.count(e)
+    for u in uniques:
+        commons += counter_a[u] * counter_b[u]
     return commons
 
 
@@ -191,12 +194,12 @@ def wl_kernel(g1: WLRDFSubgraph, g2: WLRDFSubgraph) -> int:
     for depth in range(g1.max_depth + 1):
         g1_labels = [e.label for e in chain(g1.nodes[depth], g1.edges[depth])]
         g2_labels = [e.label for e in chain(g2.nodes[depth], g2.edges[depth])]
-        kernel += count_common(g1_labels, g2_labels)
+        kernel += count_commons(g1_labels, g2_labels)
     return kernel
 
 
 def compute_kernel(rdf_graph: rdflib.Graph, instance_1: str,
-                   instance_2: str, depth: int, iterations: int = 1) -> int:
+                   instance_2: str, depth: int, iterations: int = 1) -> float:
     'Compute the Weisfeiler-Lehman kernel of two RDF instances'
     subgraph_1 = WLRDFSubgraph(instance_1, rdf_graph, depth)
     subgraph_2 = WLRDFSubgraph(instance_2, rdf_graph, depth)
