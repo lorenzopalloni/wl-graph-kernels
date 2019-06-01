@@ -1,6 +1,6 @@
 from collections import defaultdict, Counter
 from itertools import chain
-from typing import Tuple, Dict, Iterable
+from typing import Tuple, Dict, Iterable, List
 from copy import copy
 
 import rdflib
@@ -208,3 +208,57 @@ def compute_kernel(rdf_graph: rdflib.Graph, instance_1: str,
         kernel += (i+1)/iterations * wl_kernel(subgraph_1, subgraph_2)
         subgraph_1, subgraph_2 = relabel(subgraph_1, subgraph_2)
     return kernel
+
+  
+def compute_kernel_matrix(rdf_graph: rdflib.Graph, instances: List[str],
+                          max_depth: int, iterations: int) -> List[List[str]]:
+    'Compute the matrix of the kernel values between each couple of instances.'
+    n = len(instances)
+    kernel_matrix = [[0]*n for _ in range(n)]
+    for i in range(n):
+        for j in range(i + 1, n):
+            kernel_matrix[i][j] = compute_kernel(
+                rdf_graph, instances[i], instances[j], max_depth, iterations
+            )
+    for i in range(n):
+        for j in range(0, i):
+            kernel_matrix[i][j] = kernel_matrix[j][i]
+    return kernel_matrix
+
+
+def compute_kernel_par(rdf_graph: rdflib.Graph, instance_1: str,
+                       instance_2: str, max_depth: int, iterations: int = 1,
+                       idx_i: int = 0,
+                       idx_j: int = 0) -> Tuple[Tuple[int, int], float]:
+    'Compute the Weisfeiler-Lehman kernel of two RDF instances'
+    subgraph_1 = WLRDFSubgraph(instance_1, rdf_graph, max_depth)
+    subgraph_2 = WLRDFSubgraph(instance_2, rdf_graph, max_depth)
+    kernel = 0
+    for i in range(iterations):
+        kernel += (i+1)/iterations * wl_kernel(subgraph_1, subgraph_2)
+        subgraph_1, subgraph_2 = relabel(subgraph_1, subgraph_2)
+    return (idx_i, idx_j), kernel
+
+
+def compute_kernel_matrix_par(rdf_graph: rdflib.Graph, instances: List[str],
+                              max_depth: int, iterations: int,
+                              n_jobs: int = -1) -> List[List[int]]:
+    'Compute the matrix of the kernel values between each couple of instances.'
+    from joblib import Parallel, delayed
+    from itertools import product
+    n = len(instances)
+    kernel_matrix = [[0]*n for _ in range(n)]
+
+    result = Parallel(n_jobs=n_jobs, verbose=10)(
+        delayed(compute_kernel_par)
+        (rdf_graph, instances[i], instances[j], max_depth, iterations, i, j)
+        for i, j in product(range(n), range(n)) if j > i
+    )
+
+    for indexes, value in result:
+        kernel_matrix[indexes[0]][indexes[1]] = value
+
+    for i in range(n):
+        for j in range(0, i):
+            kernel_matrix[i][j] = kernel_matrix[j][i]
+    return kernel_matrix

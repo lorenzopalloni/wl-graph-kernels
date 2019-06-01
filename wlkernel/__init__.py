@@ -8,4 +8,6 @@ from ._wlkernel import (
     relabel,
     wl_kernel,
     compute_kernel,
+    compute_kernel_matrix,
+    compute_kernel_matrix_par
 )
