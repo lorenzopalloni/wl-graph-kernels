@@ -234,3 +234,4 @@ dmypy.json
 *.aux
 *.log
 *.out
+*synctex.gz
