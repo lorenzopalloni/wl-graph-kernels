@@ -170,7 +170,9 @@ def wlrdf_kernel(graph: WLRDFGraph, instance_1: str, instance_2: str,
             graph.labels[it][(e, d)]
             for e, d in graph.instance_edges[instance_2].items()
         ]
-        k = (count_commons(node_labels_1, node_labels_2)
+        kernel += (
+            (it+1) / (iterations+1)
+            * (count_commons(node_labels_1, node_labels_2)
             + count_commons(edge_labels_1, edge_labels_2))
-        kernel += k
+        )
     return kernel

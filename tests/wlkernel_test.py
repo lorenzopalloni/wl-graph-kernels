@@ -103,83 +103,24 @@ def test_wlrdfgraph_depth_2():
     assert len(wlrdf_graph.instance_nodes['A1']) == 3
     assert len(wlrdf_graph.instance_edges) == 1
     assert len(wlrdf_graph.instance_edges['A1']) == 4
-#
-#
-#def test_graph_relabeling():
-#    rdf_graph = rdflib.Graph().parse(example_data, format='turtle')
-#    wl_graph_a1 = wlkernel.WLRDFSubgraph('A1', rdf_graph, 4)
-#    wl_graph_b1 = wlkernel.WLRDFSubgraph('B1', rdf_graph, 4)
-#    a1_relabeled, b1_relabeled = wlkernel.relabel(wl_graph_a1, wl_graph_b1)
-#
-#    assert (
-#        a1_relabeled.root == b1_relabeled.root
-#        == a1_relabeled.nodes[4][0] == b1_relabeled.nodes[4][0]
-#    )
-#
-#    edge_labels = [
-#        e.label for e in chain(a1_relabeled.edges[3], b1_relabeled.edges[3])
-#    ]
-#    assert len(edge_labels) == 4
-#    assert len(set(edge_labels)) == 2
-#    node_labels = [
-#        n.label for n in chain(a1_relabeled.nodes[3], b1_relabeled.nodes[3])
-#    ]
-#    assert len(node_labels) == 4
-#    assert len(set(node_labels)) == 4
-#
-#    edge_labels = [
-#        e.label for e in chain(a1_relabeled.edges[2], b1_relabeled.edges[2])
-#    ]
-#    assert len(edge_labels) == 4
-#    assert len(set(edge_labels)) == 4
-#    node_labels = [
-#        n.label for n in chain(a1_relabeled.nodes[2], b1_relabeled.nodes[2])
-#    ]
-#    assert len(node_labels) == 2
-#    assert len(set(node_labels)) == 2
-#
-#    edge_labels = [
-#        e.label for e in chain(a1_relabeled.edges[1], b1_relabeled.edges[1])
-#    ]
-#    assert len(edge_labels) == 2
-#    assert len(set(edge_labels)) == 2
-#    node_labels = [
-#        n.label for n in chain(a1_relabeled.nodes[1], b1_relabeled.nodes[1])
-#    ]
-#    assert len(node_labels) == 2
-#    assert len(set(node_labels)) == 2
-#
-#    edge_labels = [
-#        e.label for e in chain(a1_relabeled.edges[0], b1_relabeled.edges[0])
-#    ]
-#    assert len(edge_labels) == 4
-#    assert len(set(edge_labels)) == 4
-#    node_labels = [
-#        n.label for n in chain(a1_relabeled.nodes[0], b1_relabeled.nodes[0])
-#    ]
-#    assert len(node_labels) == 4
-#    assert len(set(node_labels)) == 3
-#
-#
-#def test_wl_kernel():
-#    rdf_graph = rdflib.Graph().parse(example_data, format='turtle')
-#    wl_graph_a1 = wlkernel.WLRDFSubgraph('A1', rdf_graph, 4)
-#    wl_graph_b1 = wlkernel.WLRDFSubgraph('B1', rdf_graph, 4)
-#    assert wlkernel.wl_kernel(wl_graph_a1, wl_graph_b1) == 7
-#
-#    a1_relabeled, b1_relabeled = wlkernel.relabel(wl_graph_a1, wl_graph_b1)
-#    assert wlkernel.wl_kernel(wl_graph_a1, wl_graph_b1) == 4
-#
-#
-#def test_compute_kernel():
-#    rdf_graph = rdflib.Graph().parse(example_data, format='turtle')
-#    kernel = wlkernel.compute_kernel(rdf_graph, 'A1', 'B1', 4)
-#    assert kernel == 7
-#
-#    rdf_graph = rdflib.Graph().parse(example_data, format='turtle')
-#    kernel = wlkernel.compute_kernel(rdf_graph, 'A1', 'B1', 4, iterations=2)
-#    assert kernel == 7*1/2 + 4*2/2
-#
-#    rdf_graph = rdflib.Graph().parse(example_data, format='turtle')
-#    kernel = wlkernel.compute_kernel(rdf_graph, 'A1', 'B1', 4, iterations=3)
-#    assert kernel == 7*1/3 + 4*2/3 + 3*3/3
+
+
+def test_relabel():
+    rdf_graph = rdflib.Graph().parse(example_data, format='turtle')
+    triples = ((str(s), str(p), str(o)) for s, p, o in rdf_graph)
+    wlrdf_graph = wlkernel.WLRDFGraph(triples, ['A1', 'B1'], 4)
+    uniq_labels_0 = set(wlrdf_graph.labels[0].values())
+    wlrdf_graph.relabel()
+    uniq_labels_1 = set(wlrdf_graph.labels[1].values())
+    wlrdf_graph.relabel()
+    uniq_labels_2 = set(wlrdf_graph.labels[1].values())
+    assert len(uniq_labels_0) < len(uniq_labels_1)
+    assert len(uniq_labels_1) == len(uniq_labels_2)
+
+
+def test_kernel():
+    rdf_graph = rdflib.Graph().parse(example_data, format='turtle')
+    triples = ((str(s), str(p), str(o)) for s, p, o in rdf_graph)
+    wlrdf_graph = wlkernel.WLRDFGraph(triples, ['A1', 'B1'], 4)
+    assert wlkernel.wlrdf_kernel(wlrdf_graph, 'A1', 'B1') == 10*1
+    assert wlkernel.wlrdf_kernel(wlrdf_graph, 'A1', 'B1', 1) == 10*0.5 + 3
