@@ -8,8 +8,6 @@ from typing import (
 )
 from collections import Counter
 
-import rdflib
-
 
 class Node:
     'A node of a Weisfeiler-Lehman RDF graph'
@@ -37,62 +35,57 @@ class Edge:
 class WLRDFGraph:
     'Weisfeiler-Lehman RDF graph'
 
-    def __init__(self, graph_file: str, instances: Iterable[str],
-                 max_depth: int):
+    def __init__(self, triples: Iterable[Tuple[str, str, str]],
+                 instances: Iterable[str], max_depth: int):
         'Build a Weisfeiler-Lehman RDF graph from an RDF graph'
+        triples = list(triples)
         self.max_depth = max_depth
         self.nodes: Set[Node] = set()
         self.edges: Set[Edge] = set()
         self.labels: List[Dict[Tuple[Union[Node, Edge], int], str]] = [dict()]
-        self.instances_nodes: Dict[str, Dict[Node, int]] = {
+        self.instance_nodes: Dict[str, Dict[Node, int]] = {
             instance: dict() for instance in instances
         }
-        self.instances_edges: Dict[str, Dict[Edge, int]] = {
+        self.instance_edges: Dict[str, Dict[Edge, int]] = {
             instance: dict() for instance in instances
         }
 
-        rdf_format = 'turtle' if graph_file.split('.')[-1] == 'ttl' else 'n3'
-        rdf_graph = rdflib.Graph().parse(graph_file, format=rdf_format)
         v_map: Dict[str, Node] = dict()
         e_map: Dict[Tuple[str, str, str], Edge] = dict()
 
+        # 1. Initialization
         for instance in instances:
             root = Node()
             self.nodes.add(root)
             self.labels[0][(root, max_depth)] = 'root'
             v_map[instance] = root
 
+        # 2. Subgraph Extraction
         for instance in instances:
             search_front = {instance}
             for j in reversed(range(0, max_depth)):
                 new_search_front = set()
                 for r in search_front:
-                    triples = [
-                        (str(s), str(p), str(o))
-                        for s, p, o in rdf_graph
-                        if str(s) == r
-                    ]
-                    for sub, pred, obj in triples:
+                    r_triples = [(s, p, o) for s, p, o in triples if s == r]
+                    for sub, pred, obj in r_triples:
                         new_search_front.add(obj)
 
-                        # Node
                         if obj not in v_map:
                             v = Node()
                             self.nodes.add(v)
                             v_map[obj] = v
                         self.labels[0][(v_map[obj], j)] = obj
-                        if v_map[obj] not in self.instances_nodes[instance]:
-                            self.instances_nodes[instance][v_map[obj]] = j
+                        if v_map[obj] not in self.instance_nodes[instance]:
+                            self.instance_nodes[instance][v_map[obj]] = j
 
-                        # Edge
                         t = (sub, pred, obj)
                         if t not in e_map:
                             e = Edge()
                             self.edges.add(e)
                             e_map[t] = e
                         self.labels[0][e_map[t], j] = pred
-                        if e_map[t] not in self.instances_edges[instance]:
-                            self.instances_edges[instance][e_map[t]] = j
+                        if e_map[t] not in self.instance_edges[instance]:
+                            self.instance_edges[instance][e_map[t]] = j
 
                         v_map[obj].add_neighbor(e_map[t])
                         e_map[t].neighbor = v_map[sub]
@@ -163,19 +156,19 @@ def wlrdf_kernel(graph: WLRDFGraph, instance_1: str, instance_2: str,
     for it in range(iterations + 1):
         node_labels_1 = [
             graph.labels[it][(v, d)]
-            for v, d in graph.instances_nodes[instance_1].items()
+            for v, d in graph.instance_nodes[instance_1].items()
         ]
         node_labels_2 = [
             graph.labels[it][(v, d)]
-            for v, d in graph.instances_nodes[instance_2].items()
+            for v, d in graph.instance_nodes[instance_2].items()
         ]
         edge_labels_1 = [
             graph.labels[it][(e, d)]
-            for e, d in graph.instances_edges[instance_1].items()
+            for e, d in graph.instance_edges[instance_1].items()
         ]
         edge_labels_2 = [
             graph.labels[it][(e, d)]
-            for e, d in graph.instances_edges[instance_2].items()
+            for e, d in graph.instance_edges[instance_2].items()
         ]
         k = (count_commons(node_labels_1, node_labels_2)
             + count_commons(edge_labels_1, edge_labels_2))
