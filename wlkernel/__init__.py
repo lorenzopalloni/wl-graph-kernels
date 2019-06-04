@@ -6,4 +6,5 @@ from ._wlkernel import (
     Edge,
     WLRDFGraph,
     wlrdf_kernel,
+    wlrdf_kernel_matrix,
 )

@@ -170,11 +170,12 @@ def wlrdf_kernel(graph: WLRDFGraph, instance_1: str, instance_2: str,
             graph.labels[it][(e, d)]
             for e, d in graph.instance_edges[instance_2].items()
         ]
-        cc_nodes = count_commons(node_labels_1, node_labels_2)
-        cc_edges = count_commons(edge_labels_1, edge_labels_2)
         w = (it + 1) / (iterations + 1)
-        kernel += w * (cc_nodes + cc_edges)
+        k = (count_commons(node_labels_1, node_labels_2)
+            + count_commons(edge_labels_1, edge_labels_2))
+        kernel += w * k
     return kernel
+
 
 def wlrdf_kernel_matrix(graph: WLRDFGraph, instances: List[str],
                         iterations: int = 0) -> List[List[float]]:
