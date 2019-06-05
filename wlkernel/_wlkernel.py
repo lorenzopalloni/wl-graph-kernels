@@ -1,184 +1,143 @@
-from collections import defaultdict, Counter
-from itertools import chain
-from typing import Tuple, Dict, Iterable, List
-from copy import copy
+from typing import (
+    List,
+    Dict,
+    Tuple,
+    Iterable,
+    Union,
+    Set,
+)
+from collections import Counter
+from nptyping import Array
 
-import rdflib
+import numpy as np
 
 
-class WLRDFNode:
+class Node:
     'A node of a Weisfeiler-Lehman RDF graph'
 
-    def __init__(self, label: str, depth: int):
-        self.label = label
-        self.label_expansion = ''
-        self.depth = depth
-        self.neighbors = []
+    def __init__(self):
+        self.neighbors = set()
 
     def add_neighbor(self, edge):
-        'Add an edge as a neighbor'
-        self.neighbors.append(edge)
+        self.neighbors.add(edge)
 
-    def __repr__(self):
-        return f"WLRDFNode(label='{self.label}', depth={self.depth})"
-
-    def __str__(self):
-        return f'{self.label}-{self.depth}'
-
-    def __eq__(self, node):
-        return self.label == node.label and self.depth == node.depth
+    def __hash__(self):
+        return hash(id(self))
 
 
-class WLRDFEdge:
+class Edge:
     'An edge of a Weisfeiler-Lehman RDF graph'
 
-    def __init__(
-        self, source: WLRDFNode, dest: WLRDFNode, label: str, depth: int
-    ):
-        self.source = source
-        self.dest = dest
-        self.label = label
-        self.label_expansion = ''
-        self.depth = depth
+    def __init__(self):
         self.neighbor = None
 
-    def __repr__(self):
-        return (
-            f'WLRDFEdge(source={repr(self.source)}, dest={repr(self.dest)}, '
-            f"label='{self.label}', depth={self.depth})"
-        )
-
-    def __str__(self):
-        return (
-            f'({str(self.source)})--({self.label}-{self.depth})'
-            f'-->({str(self.dest)})'
-        )
-
-    def __eq__(self, edge):
-        return (
-            self.source == edge.source and self.dest == edge.dest
-            and self.label == edge.label and self.depth == edge.depth
-        )
+    def __hash__(self):
+        return hash(id(self))
 
 
-class WLRDFSubgraph:
-    'Weisfeiler-Lehman RDF subgraph'
+class WLRDFGraph:
+    'Weisfeiler-Lehman RDF graph'
 
-    def __init__(self, instance: str, graph: rdflib.Graph, max_depth: int):
-        self.root = WLRDFNode(label=instance, depth=max_depth)
-        self.nodes = defaultdict(list, {max_depth: [self.root]})
-        self.edges = defaultdict(list)
+    def __init__(self, triples: Iterable[Tuple[str, str, str]],
+                 instances: Iterable[str], max_depth: int):
+        'Build a Weisfeiler-Lehman RDF graph from an RDF graph'
+        triples = list(triples)
         self.max_depth = max_depth
+        self.nodes: Set[Node] = set()
+        self.edges: Set[Edge] = set()
+        self.labels: List[Dict[Tuple[Union[Node, Edge], int], str]] = [dict()]
+        self.instance_nodes: Dict[str, Dict[Node, int]] = {
+            instance: dict() for instance in instances
+        }
+        self.instance_edges: Dict[str, Dict[Edge, int]] = {
+            instance: dict() for instance in instances
+        }
 
-        search_front = [self.root]
+        v_map: Dict[str, Node] = dict()
+        e_map: Dict[Tuple[str, str, str], Edge] = dict()
 
-        for depth in range(max_depth - 1, -1, -1):
-            new_search_front = []
-            for parent in search_front:
-                triples = [
-                    (str(s), str(p), str(o))
-                    for (s, p, o) in graph if str(s) == parent.label
-                ]
-                for (subj, pred, obj) in triples:
-                    child = WLRDFNode(obj, depth)
-                    if child in self.nodes[depth]:
-                        child = self.get_node(obj, depth)
-                    edge = WLRDFEdge(parent, child, pred, depth)
+        # 1. Initialization
+        for instance in instances:
+            root = Node()
+            self.nodes.add(root)
+            self.labels[0][(root, max_depth)] = 'root'
+            v_map[instance] = root
 
-                    if child not in new_search_front:
-                        new_search_front.append(child)
+        # 2. Subgraph Extraction
+        for instance in instances:
+            search_front = {instance}
+            for j in reversed(range(0, max_depth)):
+                new_search_front = set()
+                for r in search_front:
+                    r_triples = [(s, p, o) for s, p, o in triples if s == r]
+                    for sub, pred, obj in r_triples:
+                        new_search_front.add(obj)
 
-                    child.add_neighbor(edge)
-                    edge.neighbor = parent
+                        if obj not in v_map:
+                            v = Node()
+                            self.nodes.add(v)
+                            v_map[obj] = v
+                        self.labels[0][(v_map[obj], j)] = obj
+                        if v_map[obj] not in self.instance_nodes[instance]:
+                            self.instance_nodes[instance][v_map[obj]] = j
 
-                    if child not in self.nodes[depth]:
-                        self.nodes[depth].append(child)
-                    self.edges[depth].append(edge)
-            search_front = new_search_front
+                        t = (sub, pred, obj)
+                        if t not in e_map:
+                            e = Edge()
+                            self.edges.add(e)
+                            e_map[t] = e
+                        self.labels[0][e_map[t], j] = pred
+                        if e_map[t] not in self.instance_edges[instance]:
+                            self.instance_edges[instance][e_map[t]] = j
 
-        # cleanup the root and the relative edges
-        self.nodes[max_depth][0].label = 'root'
+                        v_map[obj].add_neighbor(e_map[t])
+                        e_map[t].neighbor = v_map[sub]
 
-        for edge in self.edges[max_depth - 1]:
-            if instance == edge.source.label:
-                edge.source.label = ''
-
-    def get_node(self, label: str, depth: int):
-        'Return the corresponding WLRDFNode object'
-        for node in self.nodes[depth]:
-            if node.label == label:
-                return node
-        else:
-            raise RuntimeError('The specified node is not in the graph')
-
-    def get_edge(self, source_label: str, dest_label: str, edge_label: str,
-                 depth: int):
-        'Return the corresponding WLRDFEdge object'
-        for edge in self.edges[depth]:
-            if (edge.label == edge_label and edge.source.label == source_label
-                and edge.dest.label == dest_label):
-                return edge
-        else:
-            raise RuntimeError('The specified edge is not in the graph')
-
-    def all_nodes(self):
-        return ( node for node in chain.from_iterable(self.nodes.values()) )
-
-    def all_edges(self):
-        return ( edge for edge in chain.from_iterable(self.edges.values()) )
-
-    def __repr__(self):
-        return repr(self.edges)
-
-    def __str__(self):
-        return str(self.edges)
+                search_front = new_search_front
 
 
-def get_multiset_label(node: WLRDFNode) -> str:
-    'Sort and concatenate the labels of the neighbors of a node'
-    edges_sorted = sorted(node.neighbors, key=(lambda e: e.label))
-    return ''.join(edge.label for edge in edges_sorted)
+
+    def relabel(self, iterations: int = 1):
+        'Relabeling algorithm'
+
+        for i in range(len(self.labels), len(self.labels) + iterations + 1):
+            multisets: Dict[Tuple[Union[Node, Edge], int], List[str]] = dict()
+
+            # 1. Multiset-label determination
+            for v in self.nodes:
+                for j in range(self.max_depth + 1):
+                    if (v, j) in self.labels[0]:
+                        multisets[(v, j)] = [
+                            self.labels[i - 1][(u, j)] for u in v.neighbors
+                            if (u, j) in self.labels[i - 1]
+                        ]
+            for e in self.edges:
+                for j in range(self.max_depth):
+                    if (e, j) in self.labels[0]:
+                        multisets[(e, j)] = [
+                            self.labels[i - 1][(e.neighbor, j + 1)]
+                        ]
+
+            # 2. Sorting each multiset
+            expanded_labels = {
+                (k, j): self.labels[i - 1][(k, j)] + ''.join(sorted(multiset))
+                for (k, j), multiset in multisets.items()
+            }
+
+            # 3. Label compression
+            f = {
+                s: str(i)
+                for i, s in enumerate(set(expanded_labels.values()))
+            }
+
+            # 4. Relabeling
+            self.labels.append({
+                (k, j): f[expanded_labels[(k, j)]]
+                for (k, j) in expanded_labels
+            })
 
 
-def label_compression(labels: Iterable, start_index: int) -> Dict:
-    return {
-        multiset_label: str(new_label + start_index)
-        for new_label, multiset_label in enumerate(labels)
-    }
-
-
-def relabel(subgraph_1: WLRDFSubgraph,
-            subgraph_2: WLRDFSubgraph) -> Tuple[WLRDFSubgraph, WLRDFSubgraph]:
-    'Weisfeiler-Lehman Relabeling for RDF subgraph'
-
-    subgraph_1 = copy(subgraph_1)
-    subgraph_2 = copy(subgraph_2)
-
-    start_index_label = 0
-    uniq_labels = set()
-
-    for node in chain(subgraph_1.all_nodes(), subgraph_2.all_nodes()):
-        multiset_label = get_multiset_label(node)
-        node.label_extension = multiset_label
-        uniq_labels.add(node.label + multiset_label)
-
-    for edge in chain(subgraph_1.all_edges(), subgraph_2.all_edges()):
-        multiset_label = edge.neighbor.label
-        edge.label_extension = multiset_label
-        uniq_labels.add(edge.label + multiset_label)
-
-    label_mapping = label_compression(sorted(uniq_labels), start_index_label)
-    start_index_label += len(uniq_labels)
-
-    for node in chain(subgraph_1.all_nodes(), subgraph_2.all_nodes()):
-        node.label = label_mapping[node.label + node.label_extension]
-
-    for edge in chain(subgraph_1.all_edges(), subgraph_2.all_edges()):
-        edge.label = label_mapping[edge.label + edge.label_extension]
-    return subgraph_1, subgraph_2
-
-
-def count_commons(a: Iterable, b: Iterable):
+def count_commons(a: Iterable, b: Iterable) -> int:
     'Return the number of common elements in the two iterables'
     uniques = set(a).intersection(set(b))
     counter_a = Counter(a)
@@ -189,76 +148,48 @@ def count_commons(a: Iterable, b: Iterable):
     return commons
 
 
-def wl_kernel(g1: WLRDFSubgraph, g2: WLRDFSubgraph) -> int:
-    kernel = 0
-    for depth in range(g1.max_depth + 1):
-        g1_labels = [e.label for e in chain(g1.nodes[depth], g1.edges[depth])]
-        g2_labels = [e.label for e in chain(g2.nodes[depth], g2.edges[depth])]
-        kernel += count_commons(g1_labels, g2_labels)
+def wlrdf_kernel(graph: WLRDFGraph, instance_1: str, instance_2: str,
+                 iterations: int = 0) -> float:
+    'Compute the Weisfeiler-Lehman kernel for two instances'
+
+    if iterations > len(graph.labels) - 1:
+        graph.relabel(iterations - len(graph.labels) + 1)
+
+    kernel = 0.0
+    for it in range(iterations + 1):
+        node_labels_1 = [
+            graph.labels[it][(v, d)]
+            for v, d in graph.instance_nodes[instance_1].items()
+        ]
+        node_labels_2 = [
+            graph.labels[it][(v, d)]
+            for v, d in graph.instance_nodes[instance_2].items()
+        ]
+        edge_labels_1 = [
+            graph.labels[it][(e, d)]
+            for e, d in graph.instance_edges[instance_1].items()
+        ]
+        edge_labels_2 = [
+            graph.labels[it][(e, d)]
+            for e, d in graph.instance_edges[instance_2].items()
+        ]
+        cc_nodes = count_commons(node_labels_1, node_labels_2)
+        cc_edges = count_commons(edge_labels_1, edge_labels_2)
+        w = (it + 1) / (iterations + 1)
+        kernel += w * (cc_nodes + cc_edges)
     return kernel
 
-
-def compute_kernel(rdf_graph: rdflib.Graph, instance_1: str,
-                   instance_2: str, depth: int, iterations: int = 1) -> float:
-    'Compute the Weisfeiler-Lehman kernel of two RDF instances'
-    subgraph_1 = WLRDFSubgraph(instance_1, rdf_graph, depth)
-    subgraph_2 = WLRDFSubgraph(instance_2, rdf_graph, depth)
-    kernel = 0
-    for i in range(iterations):
-        kernel += (i+1)/iterations * wl_kernel(subgraph_1, subgraph_2)
-        subgraph_1, subgraph_2 = relabel(subgraph_1, subgraph_2)
-    return kernel
-
-  
-def compute_kernel_matrix(rdf_graph: rdflib.Graph, instances: List[str],
-                          max_depth: int, iterations: int) -> List[List[str]]:
-    'Compute the matrix of the kernel values between each couple of instances.'
+def wlrdf_kernel_matrix(graph: WLRDFGraph, instances: List[str],
+                        iterations: int = 0) -> Array[float]:
+    'Compute the matrix of the kernel values between each couple of instances'
     n = len(instances)
-    kernel_matrix = [[0]*n for _ in range(n)]
+    kernel_matrix = np.zeros((n, n))
     for i in range(n):
         for j in range(i + 1, n):
-            kernel_matrix[i][j] = compute_kernel(
-                rdf_graph, instances[i], instances[j], max_depth, iterations
-            )
+            kernel_matrix[i][j] = wlrdf_kernel(graph, instances[i],
+                                               instances[j], iterations)
     for i in range(n):
         for j in range(0, i):
             kernel_matrix[i][j] = kernel_matrix[j][i]
     return kernel_matrix
 
-
-def compute_kernel_par(rdf_graph: rdflib.Graph, instance_1: str,
-                       instance_2: str, max_depth: int, iterations: int = 1,
-                       idx_i: int = 0,
-                       idx_j: int = 0) -> Tuple[Tuple[int, int], float]:
-    'Compute the Weisfeiler-Lehman kernel of two RDF instances'
-    subgraph_1 = WLRDFSubgraph(instance_1, rdf_graph, max_depth)
-    subgraph_2 = WLRDFSubgraph(instance_2, rdf_graph, max_depth)
-    kernel = 0
-    for i in range(iterations):
-        kernel += (i+1)/iterations * wl_kernel(subgraph_1, subgraph_2)
-        subgraph_1, subgraph_2 = relabel(subgraph_1, subgraph_2)
-    return (idx_i, idx_j), kernel
-
-
-def compute_kernel_matrix_par(rdf_graph: rdflib.Graph, instances: List[str],
-                              max_depth: int, iterations: int,
-                              n_jobs: int = -1) -> List[List[int]]:
-    'Compute the matrix of the kernel values between each couple of instances.'
-    from joblib import Parallel, delayed
-    from itertools import product
-    n = len(instances)
-    kernel_matrix = [[0]*n for _ in range(n)]
-
-    result = Parallel(n_jobs=n_jobs, verbose=10)(
-        delayed(compute_kernel_par)
-        (rdf_graph, instances[i], instances[j], max_depth, iterations, i, j)
-        for i, j in product(range(n), range(n)) if j > i
-    )
-
-    for indexes, value in result:
-        kernel_matrix[indexes[0]][indexes[1]] = value
-
-    for i in range(n):
-        for j in range(0, i):
-            kernel_matrix[i][j] = kernel_matrix[j][i]
-    return kernel_matrix
