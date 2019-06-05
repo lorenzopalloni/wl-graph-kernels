@@ -185,11 +185,23 @@ def wlrdf_kernel_matrix(graph: WLRDFGraph, instances: List[str],
     n = len(instances)
     kernel_matrix = np.zeros((n, n))
     for i in range(n):
-        for j in range(i + 1, n):
+        for j in range(i, n):
             kernel_matrix[i][j] = wlrdf_kernel(graph, instances[i],
                                                instances[j], iterations)
     for i in range(n):
         for j in range(0, i):
             kernel_matrix[i][j] = kernel_matrix[j][i]
     return kernel_matrix
+
+
+def kernel_normalization(kernel_matrix: Array[float]) -> Array[float]:
+    n = kernel_matrix.shape[0]
+    res = np.zeros((n, n))
+    assert kernel_matrix.shape[1] == n
+    for i in range(n):
+        for j in range(n):
+            res[i][j] = kernel_matrix[i][j] / np.sqrt(
+                kernel_matrix[i][i] * kernel_matrix[j][j]
+            )
+    return res
 

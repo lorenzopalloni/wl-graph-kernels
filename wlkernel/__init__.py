@@ -7,4 +7,5 @@ from ._wlkernel import (
     WLRDFGraph,
     wlrdf_kernel,
     wlrdf_kernel_matrix,
+    kernel_normalization,
 )
