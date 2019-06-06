@@ -1,4 +1,5 @@
 */aifbfixed_complete.n3
+*/Lexicon_NamedRockUnit.nt
 ./Report/*.aux
 ./Report/*.out
 ./Report/*.synctex.gz
