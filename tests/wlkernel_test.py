@@ -140,27 +140,23 @@ def test_wl_relabel():
 
     uniq_labels_a1_0 = set(wl_graph_a1.labels[0].values())
     uniq_labels_b1_0 = set(wl_graph_b1.labels[0].values())
-    uniq_labels_0 = uniq_labels_a1_0.union(uniq_labels_b1_0)
 
     wlkernel.wl_relabel([wl_graph_a1, wl_graph_b1])
     uniq_labels_a1_1 = set(wl_graph_a1.labels[1].values())
     uniq_labels_b1_1 = set(wl_graph_b1.labels[1].values())
-    uniq_labels_1 = uniq_labels_a1_1.union(uniq_labels_b1_1)
+    assert len(wl_graph_a1.labels) == len(wl_graph_b1.labels) == 2
+    assert len(uniq_labels_a1_0) < len(uniq_labels_a1_1)
+    assert len(uniq_labels_b1_0) < len(uniq_labels_b1_1)
 
     wlkernel.wl_relabel([wl_graph_a1, wl_graph_b1])
     uniq_labels_a1_2 = set(wl_graph_a1.labels[2].values())
     uniq_labels_b1_2 = set(wl_graph_b1.labels[2].values())
-    uniq_labels_2 = uniq_labels_a1_2.union(uniq_labels_b1_2)
+    assert len(wl_graph_a1.labels) == len(wl_graph_b1.labels) == 3
 
     wlkernel.wl_relabel([wl_graph_a1, wl_graph_b1])
     uniq_labels_a1_3 = set(wl_graph_a1.labels[3].values())
     uniq_labels_b1_3 = set(wl_graph_b1.labels[3].values())
-    uniq_labels_3 = uniq_labels_a1_3.union(uniq_labels_b1_3)
-
     assert len(wl_graph_a1.labels) == len(wl_graph_b1.labels) == 4
-    assert len(uniq_labels_0) < len(uniq_labels_1)
-    assert len(uniq_labels_1) < len(uniq_labels_2)
-    assert len(uniq_labels_2) == len(uniq_labels_3)
 
 
 def test_wl_kernel():

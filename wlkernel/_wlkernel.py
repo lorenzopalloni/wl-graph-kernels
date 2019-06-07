@@ -88,6 +88,7 @@ def wl_relabel(wl_graphs: Iterable[WLGraph], iterations: int = 1):
 
     wl_graphs = list(wl_graphs)
 
+    assert len(set(len(wl_graph.labels) for wl_graph in wl_graphs))
     m = len(wl_graphs[0].labels)
     for i in range(m, m + iterations):
 
@@ -139,6 +140,7 @@ def wl_kernel(wl_graph_1: WLGraph, wl_graph_2: WLGraph,
               iterations: int = 0) -> float:
     'Compute the Weisfeiler-Lehman kernel for two WLGraphs'
 
+    assert len(wl_graph_1.labels) == len(wl_graph_2.labels)
     m = len(wl_graph_1.labels)
     if iterations > m - 1:
         wl_relabel([wl_graph_1, wl_graph_2], iterations - m + 1)
@@ -220,7 +222,7 @@ class WLRDFGraph:
             for j in reversed(range(0, max_depth)):
                 new_search_front = set()
                 for r in search_front:
-                    r_triples = [(s, p, o) for s, p, o in triples if s == r]
+                    r_triples = ((s, p, o) for s, p, o in triples if s == r)
                     for sub, pred, obj in r_triples:
                         new_search_front.add(obj)
 
