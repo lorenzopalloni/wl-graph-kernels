@@ -239,3 +239,4 @@ dmypy.json
 *.nav
 *.toc
 *.vrb
+*.snm
