@@ -1,0 +1,7 @@
+sklearn
+numpy
+nptyping
+rdflib
+path.py
+pytest
+pytest-cov
