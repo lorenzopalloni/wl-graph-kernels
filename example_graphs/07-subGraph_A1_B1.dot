@@ -1,0 +1,60 @@
+digraph G {
+    
+    newrank = true;
+    rankdir = LR;
+    node[style = "bold"]
+    edge[style = "bold"]
+    color = "aquamarine4";
+    node [color = "aquamarine4", fontcolor = "aquamarine4"];
+    root [label="ϵ (A1)"];
+    o_root [label="ϵ (B1)"];
+    depth_4_node[label = "d = 4", shape = plaintext, fontcolor = "aquamarine4"];
+    {rank = same; depth_4_node; root; o_root};
+    
+    color = "blue4";
+    node [color = "blue4", fontcolor = "blue4"];
+    edge [color = "blue4", fontsize = 10, fontcolor = "blue4"];
+    root -> C [label = "P2", fontcolor = "red2"];
+    root -> D [label = "P3", fontcolor = "red2"];
+    o_F [label = "F"];
+    o_G [label = "G"];
+    o_root -> o_F [label = "P3", fontcolor = "red2"];
+    o_root -> o_G [label = "P2", fontcolor = "red2"];
+    depth_3_node[label = "d = 3", shape = plaintext, fontcolor = "blue4"];
+    {rank = same; depth_3_node; C; D; o_F; o_G};
+    
+    color = "cyan4";
+    node [color = "cyan4", fontcolor = "cyan4"];
+    edge [color = "cyan4", fontsize = 10, fontcolor = "cyan4"];
+    C -> H [label = "P4"];
+    D -> H [label = "P4"];
+    o_I [label = "I"];
+    o_F -> o_I [label = "P5"];
+    o_G -> o_I [label = "P5"];
+    depth_2_node[label = "d = 2", shape = plaintext, fontcolor = "cyan4"];
+    {rank = same; depth_2_node; H; o_I};
+
+    
+    color = "darkorchid4";
+    node [color = "darkorchid4", fontcolor = "darkorchid4"];
+    edge [color = "darkorchid4", fontsize = 10, fontcolor = "darkorchid4"];
+    H -> A2 [label = "P6", fontcolor = "red2"];
+    o_B2 [label = "B2"];
+    o_I -> o_B2 [label = "P6", fontcolor = "red2"];
+    depth_1_node[label = "d = 1", shape = plaintext, fontcolor = "darkorchid4"];
+    {rank = same; depth_1_node; o_B2; A2};
+
+    color = "green4";
+    node [color = "green4", fontcolor = "green4"];
+    edge [color = "green4", fontsize = 10, fontcolor = "green4"];
+    D_0 [label = "D", style = "dotted"];
+    E_0 [label = "E", fontcolor = "red2"];
+    F_0 [label = "F", style = "dotted"];
+    A2 -> D_0 [label = "P2", fontcolor = "red2"];
+    A2 -> E_0 [label = "P3", fontcolor = "red2"];
+    o_B2 -> E_0 [label = "P3", fontcolor = "red2"];
+    o_B2 -> F_0 [label = "P2", fontcolor = "red2"];
+
+    depth_0_node[label = "d = 0", shape = plaintext, fontcolor = "green4"];
+    {rank = same; depth_0_node; D_0; E_0; F_0};
+}
