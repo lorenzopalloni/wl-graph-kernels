@@ -177,7 +177,7 @@ The runtime complexity of the Weisfeiler-Lehman algorithm with h iterations is $
 \frametitle{Weisfeiler-Lehman kernel}
 
 \begin{definition}[Weisfeiler-Lehman kernel]
-Let $G_i = (V, E, l_i)$ and $G_i^\prime = (V^\prime , E^\prime , l_i)$ be the i-th iteration rewriting of the graphs $G$ and $G^\prime$ with the Weisfeiler-Lehman algorithm and h the number of iterations. Then the Weisfeiler-Lehman kernel is defined as:
+Let $G_i = (V, E, \ell_i)$ and $G_i^\prime = (V^\prime , E^\prime , \ell_i)$ be the i-th iteration rewriting of the graphs $G$ and $G^\prime$ with the Weisfeiler-Lehman algorithm and h the number of iterations. Then the Weisfeiler-Lehman kernel is defined as:
 
 \begin{align}
 k_{\mathrm{WL}}^{h}\left(G, G^\prime\right)=\sum_{i=0}^h k_\delta\left(G_i, G_i^\prime\right)
@@ -186,7 +186,7 @@ k_{\mathrm{WL}}^{h}\left(G, G^\prime\right)=\sum_{i=0}^h k_\delta\left(G_i, G_i^
 where
 
 \begin{align}
-k_\delta\left((V, E, l),\left(V^\prime, E^\prime, l^\prime\right)\right)=\sum_{v \in V} \sum_{v^{\prime} \in V^{\prime}} \delta\left(l(v), l^{\prime}\left(v^{\prime}\right)\right)
+k_\delta\left((V, E, \ell),\left(V^\prime, E^\prime, \ell^\prime\right)\right)=\sum_{v \in V} \sum_{v^{\prime} \in V^{\prime}} \delta\left(\ell(v), \ell^{\prime}\left(v^{\prime}\right)\right)
 \end{align}
 
 Here $\delta$ is the Dirac kernel, which tests for equality, it is 1 if its arguments are equal, and 0 otherwise.
@@ -263,7 +263,7 @@ This paper proposes an approximation of the Weisfeiler-Lehman kernel designed fo
 \frametitle{Weisfeiler-Lehman RDF graph}
 
 \begin{definition}[Weisfeiler-Lehman RDF graph]
-A Weisfeiler-Lehman RDF graph is a graph $G = (V, E, l)$, where $V$ is a set of vertices, $E$ a set of directed edges, and $l:(V \cup E) \times N \rightarrow \Sigma$ a labeling function from vertices $V$ or edges $E$ and a depth index $j \in \mathbb{N}$ to a set of labels $\Sigma$.
+A Weisfeiler-Lehman RDF graph is a graph $G = (V, E, \ell)$, where $V$ is a set of vertices, $E$ a set of directed edges, and $\ell:(V \cup E) \times N \rightarrow \Sigma$ a labeling function from vertices $V$ or edges $E$ and a depth index $j \in \mathbb{N}$ to a set of labels $\Sigma$.
 \end{definition}
 
 \begin{definition}[Neighborhood]
@@ -368,7 +368,7 @@ Relabeling.
 \frametitle{Weisfeiler-Lehman kernel for RDF}
 
 \begin{definition}[Weisfeiler-Lehman kernel for RDF]
-Let $G$ be a Weisfeiler-Lehman RDF graph and rewritten for h iterations, and $l_0$ to $l_h$ the resulting label functions. Then we compute a kernel between two instances $i$, $i^\prime \in I$, as:
+Let $G$ be a Weisfeiler-Lehman RDF graph and rewritten for h iterations, and $\ell_0$ to $\ell_h$ the resulting label functions. Then we compute a kernel between two instances $i$, $i^\prime \in I$, as:
 
 \begin{align}
 k_{\mathrm{WLRDF}}^{h}\left(i, i^{\prime}\right)=\sum_{n=0}^{h} \frac{n+1}{h+1} k_{\delta, \mathrm{RDF}}^{n}\left(\left(\mathcal{V}_{i}, \mathcal{E}_{i}\right),\left(\mathcal{V}_{i^{\prime}}, \mathcal{E}_{i^{\prime}}\right)\right)
@@ -377,8 +377,8 @@ k_{\mathrm{WLRDF}}^{h}\left(i, i^{\prime}\right)=\sum_{n=0}^{h} \frac{n+1}{h+1} 
 where
 
 \begin{align}
-k_{\delta, \mathrm{RDF}}^{n}\left(\left(\mathcal{V}_{i}, \mathcal{E}_{i}\right),\left(\mathcal{V}_{i^{\prime}}, \mathcal{E}_{i^{\prime}}\right)\right) &=\sum_{(v, d) \in \mathcal{V}_{i}\left(v^{\prime}, d^{\prime}\right) \in \mathcal{V}_{i^{\prime}}} \delta\left(l_{n}(v, d), l_{n}\left(v^{\prime}, d^{\prime}\right)\right) \\
-&+\sum_{(e, d) \in \mathcal{E}_{i}\left(c^{\prime}, d^{\prime}\right) \in \mathcal{V}_{i^{\prime}}} \delta\left(l_{n}(e, d), l_{n}\left(e^{\prime}, d^{\prime}\right)\right)
+k_{\delta, \mathrm{RDF}}^{n}\left(\left(\mathcal{V}_{i}, \mathcal{E}_{i}\right),\left(\mathcal{V}_{i^{\prime}}, \mathcal{E}_{i^{\prime}}\right)\right) &=\sum_{(v, d) \in \mathcal{V}_{i}\left(v^{\prime}, d^{\prime}\right) \in \mathcal{V}_{i^{\prime}}} \delta\left(\ell_{n}(v, d), \ell_{n}\left(v^{\prime}, d^{\prime}\right)\right) \\
+&+\sum_{(e, d) \in \mathcal{E}_{i}\left(c^{\prime}, d^{\prime}\right) \in \mathcal{V}_{i^{\prime}}} \delta\left(\ell_{n}(e, d), \ell_{n}\left(e^{\prime}, d^{\prime}\right)\right)
 \end{align}
 
 \end{definition}

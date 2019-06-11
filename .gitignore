@@ -236,7 +236,6 @@ dmypy.json
 *.log
 *.out
 *synctex.gz
-*.nav
 *.toc
 *.vrb
 *.snm
